@@ -27,13 +27,13 @@ function [H, theta, rho] = hough_lines_acc(BW, varargin)
     diag = ceil(diag_dist/rhoStep)*rhoStep;   % discrete length of diagonal
     rho = -diag:diag;
     ntheta = length(theta);
-    H = zeros(nrho,ntheta);
+    H = zeros(ntheta,nrho);
     [idy, idx] = find(BW==1);
     for i = 1:length(idx)
         for j =  1:ntheta
             ta = (theta(j))/180*pi;
             d = idx(i)*cos(ta) + idy(i)*sin(ta);
-            H(round(d)+diag,j) = H(round(d)+diag,j)+1;
+            H(round(d)+diag) = H(j,round(d)+diag)+1;
         end
     end
 end

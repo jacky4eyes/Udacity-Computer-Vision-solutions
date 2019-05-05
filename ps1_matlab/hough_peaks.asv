@@ -36,15 +36,14 @@ function peaks = hough_peaks(H, varargin)
     % and then do sorting, you can find the global maximum and then remove
     % the neighbour of it and itself. This is much neater.
     
-    
+    peaks = zeros(numpeaks, 2);
     drho = (nHoodSize(1) - 1)/2;
     dtheta = (nHoodSize(2) - 1)/2;
     H_new = H.*(H > threshold);
-    peaks = zeros(numpeaks, 2);
     for i = 1:numpeaks
         [rho, theta] = find(H_new == max(H_new(:)));    
         peaks(i,:) = [rho(1) theta(1)];
-        H_new(max(1,rho-drho):min(rho+drho,size(H_new,1)),max(1,theta-dtheta):min(theta+dtheta,size(H_new,2))) = H_new(max(1,rho-drho):min(rho+drho,size(H_new,1)),max(1,theta-dtheta):min(theta+dtheta,size(H_new,2)))*0;
+        H_new(max(1,rho-drho):min(rho+drho,size(H_new,1)),max(1,theta-dtheta):min(theta+dtheta,size(H_new,2))) = H(max(1,rho-drho):min(rho+drho,size(H,1)),max(1,theta-dtheta):min(theta+dtheta,size(H,2)))*0;
     end
     
     

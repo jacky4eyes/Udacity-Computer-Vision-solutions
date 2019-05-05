@@ -24,8 +24,8 @@ imwrite(imadjust(rescale(H)), fullfile('output', 'ps1-2-a-1.png'));  % save as o
 
 %% 2-b
 % find and choose peaks 
-peaks = hough_peaks(H, 6,'Threshold',0.2*max(H(:)),'NHoodSize',[5 5]);  % defined in hough_peaks.m
-% peaks = houghpeaks(H, 15,'Threshold',0.4*max(H(:)),'NHoodSize',[5 5]);  % compare with MATLAB version 
+peaks = hough_peaks(H, 40,'Threshold',0.5*max(H(:)),'NHoodSize',[5 5]);  % defined in hough_peaks.m
+peaks = houghpeaks(H, ,'Threshold',0.2*max(H(:)),'NHoodSize',[11 11]);  % compare with MATLAB version 
 % subplot(2,2,4)
 % imshow(H,[],'XData',theta,'YData',rho,'InitialMagnification','fit');
 % xlabel('\theta'), ylabel('\rho');
@@ -35,8 +35,8 @@ peaks = hough_peaks(H, 6,'Threshold',0.2*max(H(:)),'NHoodSize',[5 5]);  % define
 %% 2-c 
 % TODO: Highlight peak locations on accumulator array, save as output/ps1-2-b-1.png
 
+hough_lines_draw(img,1,peaks,rho,theta)
 
-hough_lines_draw(img, 'ps1-2-c-1.png', peaks, rho, theta)
 
 
 %% TODO: Rest of your code here
