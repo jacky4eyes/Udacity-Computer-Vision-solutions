@@ -34,9 +34,30 @@ peaks = hough_peaks(H, 6,'Threshold',0.2*max(H(:)),'NHoodSize',[5 5]);  % define
 
 %% 2-c 
 % TODO: Highlight peak locations on accumulator array, save as output/ps1-2-b-1.png
-
-
 hough_lines_draw(img, 'ps1-2-c-1.png', peaks, rho, theta)
 
+%% q3
 
-%% TODO: Rest of your code here
+clc;
+img3 = imread(fullfile('input', 'ps1-input0-noise.png'));  
+hsize3 = 7.*[1 1];
+sigma3 = 5;
+h3 = fspecial('gaussian',hsize3,sigma3);
+img3_smooth = imfilter(img3, h3);
+[img3_edges, threshOut3]  = edge(img3,'canny',0.4,4);
+[img3_smooth_edges, threshOut_smooth3]  = edge(img3_smooth,'canny',0.4,4);
+% img3_gray = mean(img3,3);% converte to grayscale
+
+figure(3)
+subplot(2,2,1)
+imshow(img3);
+subplot(2,2,2)
+imshow(img3_smooth);
+subplot(2,2,3)
+imshow(img3_edges);
+subplot(2,2,4)
+imshow(img3_smooth_edges)
+imwrite(img3_smooth_edges, fullfile('output', 'ps1-3-a-1.png'));  % save as output/ps1-1-a-1.png
+
+
+
