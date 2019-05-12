@@ -12,11 +12,8 @@ function H = hough_circles_acc(BW, radius)
         x = indx(i);
         y = indy(i);
         for ta = -179:180
-            a = round(x + cos(ta/180*pi)*radius); 
-            b = round(y + sin(ta/180*pi)*radius);
-            if (a>0)&&(b>0)&&(a<=x_size)&&(b<=y_size)
-                H(a,b) = 1+H(a,b) ;
-            end
+            a = x + cos(ta/180*pi)* 
+            b = y + sin(ta/180*pi)
         end
     end
 end

@@ -32,9 +32,10 @@ function peaks = hough_peaks(H, varargin)
     % peaks = [rho theta];
     % peaks = peaks(1:numpeaks,:);
     
-    % the one below is really a good idea. Instead of finding local maxmima
+    % the one below is a really good idea. Instead of finding local maxmima
     % and then do sorting, you can find the global maximum and then remove
-    % the neighbour of it and itself. This is much neater.
+    % the neighbour of it and itself. This is much neater, and less prone
+    % to bugs.
     
     
     drho = (nHoodSize(1) - 1)/2;
@@ -43,9 +44,16 @@ function peaks = hough_peaks(H, varargin)
     peaks = zeros(numpeaks, 2);
     for i = 1:numpeaks
         [rho, theta] = find(H_new == max(H_new(:)));    
-        peaks(i,:) = [rho(1) theta(1)];
-        H_new(max(1,rho-drho):min(rho+drho,size(H_new,1)),max(1,theta-dtheta):min(theta+dtheta,size(H_new,2))) = H_new(max(1,rho-drho):min(rho+drho,size(H_new,1)),max(1,theta-dtheta):min(theta+dtheta,size(H_new,2)))*0;
+        if (rho(1) ~= 1) || (theta(1) ~= 1)
+            peaks(i,:) = [rho(1) theta(1)];
+            ind_ro_update = max(1,rho(1)-drho):min(rho(1)+drho,size(H_new,1))
+            ind_ta_update = max(1,theta(1)-dtheta):min(theta(1)+dtheta,size(H_new,2))
+            H_new(ind_ro_update,ind_ta_update) = H_new(ind_ro_update, ind_ta_update)*0;
+        else
+            peaks = peaks(1:end-1,:);
+        end
     end
+    
     
     
 end

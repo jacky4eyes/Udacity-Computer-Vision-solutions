@@ -17,16 +17,14 @@ function [centers, radii] = find_circles(BW, radius_range)
     radii = [];
     r = radius_range(1);
     for i = 1:size(H,3)
-       centers_r = hough_peaks(H(:,:,i),6,'Threshold',0.5*H_max,'NHoodSize',[1 1]*7); 
+       centers_r = hough_peaks(H(:,:,i),6,'Threshold',0.7*H_max,'NHoodSize',[1 1]*7); 
        centers = [centers; centers_r];
        radii = [radii; ones([size(centers_r,1),1]).*r];
        r = r+1;
     end
     
     % Jacky: up to this point, we can remove duplicate concentric circles.
-    % it shall be straightforward. it should be better to take primary
-    % circles from greater radius downwards
-    
+    % it shall be straightforward. it should be better to take primary s
     
     
     
