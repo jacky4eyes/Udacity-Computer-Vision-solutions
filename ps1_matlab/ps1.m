@@ -1,5 +1,23 @@
-% ps1
-
+%% ps1
+%
+% Jacky general notes:
+%
+% A problem set is aimed at familiarising with Hough transform and how to 
+% implement edge detection with paramatric models.
+%
+% This is a massive work and I didn't expect spending so much time on a
+% relatively straightforward algorithm. Partly this is due to I haven't 
+% implemented things on MATLAB for a while. It turns out that when working 
+% on this problem set, I jumped into a lot of little bugs. This shall be
+% potentially avoided if one has better programming experience than me at 
+% this stage. Anyway, although the algorithm is easy to explain, expect 
+% there to be some frustration. 
+%
+% Since the work spanned about two weeks, some variables are named with
+% different styles, and the utility function might not match exactly the
+% earlier questions. I personally don't see there is a point of making
+% the functions as robust as possible. Thus they are left that way.
+%
 %% 1-a
 clc;
 img = imread(fullfile('input', 'ps1-input0.png'));  % already grayscale
@@ -174,7 +192,7 @@ hough_lines_draw(img6_gray, 'ps1-6-a-1.png', peaks6, rho6, theta6)
 % distinguishable and are very straight as well
 
 % Jacky: the next is to find parallel lines that are not too far apart
-%%
+%
 pens = [];
 for i = 1:length(peaks)
     prl_ind = find((abs(peaks6(:,2)- peaks6(i,2))<2));
@@ -192,6 +210,80 @@ hough_lines_draw(img6_gray, 'ps1-6-c-1.png', pens, rho6, theta6)
 
 %% q7
 
+clc;
+radius7 = 5;
+hsize7 = 3.*[1 1];
+sigma7 = 2;
+h7 = fspecial('gaussian',hsize7,sigma7);    
+img7_smooth = imfilter(img6_gray,h7,sigma7);
+img7_smooth_edges = edge(img7_smooth,'canny',0.2,3);
+H7 = hough_circles_acc(img7_smooth_edges,radius7);
+figure(10)
+subplot(2,2,1); imshow(img6_gray);
+subplot(2,2,2); imshow(img7_smooth);
+subplot(2,2,3); imshow(img7_smooth_edges);
+subplot(2,2,4); imshow(imadjust(rescale(H7)));
 
+% centers7 = hough_peaks(H7,9);
+[centers7, radii7] = find_circles(img7_smooth_edges, [25 35]);
+[centers7_big,radii7_big] = remove_duplicate(centers7, radii7,...
+    size(img7_smooth_edges,1),size(img7_smooth_edges,2));
 
+figure(1)
+imshow(img6_gray); hold on; 
+for i =1:size(centers7_big,1)
+    x = centers7_big(i,2);
+    y = centers7_big(i,1);
+    radius = radii7_big(i);
+    plot(x+round(cos([-179:180]./180*pi)*radius),...
+    y+round(sin([-179:180]./180*pi)*radius),'color','b','linewidth',3)
+end
+saveas(gcf, fullfile('output','ps1-7-a-1.png'))
 
+% Jacky: at this point, we can further improve the performance the circle
+% detection algorithm. Since there are some false detections, I have these
+% ideas in mind:
+% 1. Iterative approach - after confirming a circle, e.g. the highest vote,
+% clear pixels in the corresponding area and rerun the algorithm. This can
+% help you by choosing a dynamic threshold.
+% 2. Check for each center, whether it has a full coverage of circumference
+% within a neighbourhood? This shall remove the "n" shape in the image.
+% 3. Investigate the area of each detected circles. Increase sigma and use
+% smaller radius for more accurate matching
+
+%% q8
+
+clc;
+img8 = imread(fullfile('input', 'ps1-input3.png'));  
+img8_gray = mean(img8,3)/255.0;
+radius8 = 5;
+hsize8 = 3.*[1 1];
+sigma8 = 2;
+h8 = fspecial('gaussian',hsize8,sigma8);    
+img8_smooth = imfilter(img8_gray,h8,sigma8);
+img8_smooth_edges = edge(img8_smooth,'canny',0.2,3);
+H8 = hough_circles_acc(img8_smooth_edges,radius8);
+figure(12)
+subplot(2,2,1); imshow(img8_gray);
+subplot(2,2,2); imshow(img8_smooth);
+subplot(2,2,3); imshow(img8_smooth_edges);
+subplot(2,2,4); imshow(imadjust(rescale(H8)));
+
+% centers7 = hough_peaks(H7,9);
+[centers8, radii8] = find_circles(img8_smooth_edges, [15 25]);
+[centers8_big,radii8_big] = remove_duplicate(centers8, radii8,...
+    size(img8_smooth_edges,1),size(img8_smooth_edges,2));
+
+figure(1)
+imshow(img8_gray); hold on; 
+for i =1:size(centers8_big,1)
+    x = centers8_big(i,2);
+    y = centers8_big(i,1);
+    radius = radii8_big(i);
+    plot(x+round(cos([-179:180]./180*pi)*radius),...
+    y+round(sin([-179:180]./180*pi)*radius),'color','b','linewidth',3)
+end
+saveas(gcf, fullfile('output','ps1-8-a-1.png'))
+
+% Jacky: well... obviously oval shaped object are not very well detected..
+% might need to do some research on this topic if so-required

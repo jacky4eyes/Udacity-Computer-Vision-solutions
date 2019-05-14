@@ -13,6 +13,6 @@ function [out_centers, out_radii] = remove_duplicate(centers, radii, xsize,ysize
             out_centers = [out_centers;[x y]];
             out_radii = [out_radii; r];
         end
-        coverage((max(1,x-5):min(xsize,x+3)),(max(1,y-5):min(ysize,y+5))) = 1;
+        coverage((max(1,x-5):min(xsize,x+5)),(max(1,y-5):min(ysize,y+5))) = 1;
     end
 end
