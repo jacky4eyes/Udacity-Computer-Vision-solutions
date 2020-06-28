@@ -1,3 +1,7 @@
 # It has just begun...
 
-I will be writing in MATLAB..
+The code is in MATLAB. Problem set source files included. (template scripts and input images.)
+
+Complete: PS1
+
+Ongoing: PS2

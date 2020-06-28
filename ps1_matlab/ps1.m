@@ -6,17 +6,19 @@
 % implement edge detection with paramatric models.
 %
 % This is a massive work and I didn't expect spending so much time on a
-% relatively straightforward algorithm. Partly this is due to I haven't 
-% implemented things on MATLAB for a while. It turns out that when working 
-% on this problem set, I jumped into a lot of little bugs. This shall be
-% potentially avoided if one has better programming experience than me at 
-% this stage. Anyway, although the algorithm is easy to explain, expect 
-% there to be some frustration. 
+% relatively straightforward algorithm. This is partly due to the fact that 
+% I haven't been writing MATLAB for a while. It turns out that when working 
+% on this problem set, I jumped into a lot of little bugs, which could be
+% avoided with better experience in programming than my current position.
+% Anyway, although the algorithms are easy to explain in their concept, 
+% expect certain frustration as you go.
 %
-% Since the work spanned about two weeks, some variables are named with
-% different styles, and the utility function might not match exactly the
+% Since the work was done in a period of two weeks, some variables are 
+% named under different conventions, which is compliated further by the 
+% the utility functions I wrote that did not match exactly the
 % earlier questions. I personally don't see there is a point of making
-% the functions as robust as possible. Thus they are left that way.
+% the functions as robust as possible, and thus they are left as the
+% way they were.
 %
 %% 1-a
 clc;
