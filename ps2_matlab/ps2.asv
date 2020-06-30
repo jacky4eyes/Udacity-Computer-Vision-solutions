@@ -1,0 +1,65 @@
+% ps2
+
+%% 1-a
+% Read images
+L = im2double(imread(fullfile('input', 'pair0-L.png')));
+R = im2double(imread(fullfile('input', 'pair0-R.png')));
+
+figure(1)
+subplot(1,2,1)
+imshow(L)
+subplot(1,2,2)
+imshow(R)
+
+clc;
+
+img_size = size(L,1);
+win_size = 5;
+
+D_L = zeros(img_size - win_size+1, img_size - win_size+1);
+D_R = zeros(img_size - win_size + 1,img_size - win_size + 1);
+for row=1:(img_size - win_size + 1)
+    R_strip = R(row:(row + win_size - 1),:);
+    L_strip = L(row:(row + win_size - 1),:);
+    D_L(row,:) = match_strips(L_strip, R_strip, win_size);
+    D_R(row,:) = match_strips(R_strip, L_strip, win_size);
+end
+
+figure(2)
+subplot(1,2,1)
+imshow(-D_L)
+subplot(1,2,2)
+imshow(D_R)
+
+% imwrite(D_L,'./output/ps2-1-a-1.png')
+% imwrite(D_R,'./output/ps2-1-a-2.png')
+
+
+%% 2-a
+
+
+
+% Compute disparity
+D_L = disparity_ssd(L, R);
+D_R = disparity_ssd(R, L);
+
+% TODO: Save output images (D_L as output/ps2-1-a-1.png and D_R as output/ps2-1-a-2.png)
+% Note: They may need to be scaled/shifted before saving to show results properly
+
+% TODO: Rest of your code here
+
+
+%%
+
+
+
+
+
+%% 
+x_move = -2000;
+phi_l1 = atan2(-200+x_move,1000)/pi*180;
+phi_l2 = atan2(200+x_move,1000)/pi*180;
+phi_r1 = atan2(-200-500+x_move,1000)/pi*180;
+phi_r2 = atan2(200-500+x_move,1000)/pi*180;
+[phi_l1 phi_l2].*3
+[phi_r1 phi_r2].*3
