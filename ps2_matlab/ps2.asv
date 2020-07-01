@@ -2,34 +2,25 @@
 
 %% 1-a
 % Read images
+
+clc;
 L = im2double(imread(fullfile('input', 'pair0-L.png')));
 R = im2double(imread(fullfile('input', 'pair0-R.png')));
-
 figure(1)
 subplot(1,2,1)
 imshow(L)
 subplot(1,2,2)
 imshow(R)
 
-clc;
-
-img_size = size(L,1);
-win_size = 5;
-
-D_L = zeros(img_size - win_size+1, img_size - win_size+1);
-D_R = zeros(img_size - win_size + 1,img_size - win_size + 1);
-for row=1:(img_size - win_size + 1)
-    R_strip = R(row:(row + win_size - 1),:);
-    L_strip = L(row:(row + win_size - 1),:);
-    D_L(row,:) = match_strips(L_strip, R_strip, win_size);
-    D_R(row,:) = match_strips(R_strip, L_strip, win_size);
-end
+D_L = disparity_ssd(L,R,5);
+D_R = disparity_ssd(R,L,5);
 
 figure(2)
 subplot(1,2,1)
 imshow(-D_L)
 subplot(1,2,2)
-imshow(D_R)
+imshow(D_R-1)
+
 
 % imwrite(D_L,'./output/ps2-1-a-1.png')
 % imwrite(D_R,'./output/ps2-1-a-2.png')
@@ -37,29 +28,56 @@ imshow(D_R)
 
 %% 2-a
 
+clc; 
+L = mean(im2double(imread(fullfile('input', 'pair1-L.png'))),3);
+R = mean(im2double(imread(fullfile('input', 'pair1-R.png'))),3);
 
 
-% Compute disparity
-D_L = disparity_ssd(L, R);
-D_R = disparity_ssd(R, L);
+figure(2)
+subplot(2,2,1)
+imshow(L)
+subplot(2,2,2)
+imshow(R)
+tic;
 
-% TODO: Save output images (D_L as output/ps2-1-a-1.png and D_R as output/ps2-1-a-2.png)
-% Note: They may need to be scaled/shifted before saving to show results properly
+% Using different window sizes for D_L and D_R
+% It is clear that the larger window size, the "smoother" the results,
+% which is good for indication of main object groups. However, the edges
+% look distorted and some fine/small objects are missing. By contrast, a
+% small window size will indicated a lot more small objects and more
+% defined edges, with the introduction of more "noises".
 
-% TODO: Rest of your code here
 
-
+D_L = disparity_ssd(L,R,20); 
+D_R = disparity_ssd(R,L,10);
+t_used = toc;
+fprintf('Time used: %.2f s\n',t_used);
 %%
-
-
-
-
+subplot(2,2,3)
+imshow(-D_L/100)
+colormap(gca, jet(256));colorbar;
+subplot(2,2,4)
+imshow(D_R/100)
+colormap(gca, jet(256));colorbar;
 
 %% 
-x_move = -2000;
-phi_l1 = atan2(-200+x_move,1000)/pi*180;
-phi_l2 = atan2(200+x_move,1000)/pi*180;
-phi_r1 = atan2(-200-500+x_move,1000)/pi*180;
-phi_r2 = atan2(200-500+x_move,1000)/pi*180;
-[phi_l1 phi_l2].*3
-[phi_r1 phi_r2].*3
+D_L_new = floor(max(-D_L,0));
+% Lmax = 0;
+% Lmin = min(min(D_L));
+% res2a1 = (-D_L)./(Lmax-Lmin);
+% res2a1 = floor(res2a1*256);
+imshow(double(D_L_new/256))
+res2a1 = ind2rgb(uint(D_L_new,'jet');
+imwrite(D_L_new/256,'./output/ps2-2-a-1.png')
+
+
+
+
+
+
+
+
+
+
+
+
