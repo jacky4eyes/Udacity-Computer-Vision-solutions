@@ -3,16 +3,20 @@ function D = disparity_ncorr(L, R, winsize)
     img_width = size(L, 2);
     D = zeros(img_length, img_width);
     parfor row=1:(img_length - winsize + 1)
+        disp(row)
         strip_L = L(row:(row + winsize - 1),:);
         strip_R = R(row:(row + winsize - 1),:);
+        disparity_row = zeros([1 img_width]);
+%             num_of_col = size(strip_L, 2);
+%     disparity = zeros([1 num_of_col]);
         for col=1:(img_width - winsize + 1)
             patch_L = strip_L(:, col:col+winsize-1);
             right_col_ind = max(1,col-winsize-floor(img_width/4)):min(col+winsize+floor(img_width/4), img_width-winsize+1);
-            c = normxcorr2(patch_L, strip_R(:,right_col_ind));
-            [~,best_R_col] = find(c==max(c(:)));
-            best_R_col = best_R_col + (best_R_col~=0)*right_col_ind(1);
-            D(row,col) = best_R_col - col; 
+            best_right_i = normxcorr2(patch_L, strip_R(:,right_col_ind));
+            best_right_i = best_right_i + (best_right_i~=0)*right_col_ind(1);
+            disparity_row(col) = best_right_i - col; 
         end
+        D(row,:) = disparity_row;
     end    
 end
     

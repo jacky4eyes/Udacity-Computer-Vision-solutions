@@ -6,6 +6,5 @@ function D = disparity_ssd(L, R, winsize)
         L_strip = L(row:(row + winsize - 1),:);
         R_strip = R(row:(row + winsize - 1),:);
         D(row,:) = match_strips(L_strip, R_strip, winsize);
-%         D(row,1) = row;
     end
 end
