@@ -53,7 +53,7 @@ Perhaps running a prior round of kernel to establish a contrast profile in the i
 The NCC method inherently handles such situation with better tolerance. <mark>Therefore, for less noisy images, it can be argued that small-window NCC serves better as the default method.</mark>
 
 
-## PS3
+# PS3
 
 ### Projective matrix via DLT (Direct Linear Transformation)
 
@@ -64,3 +64,14 @@ The solution will be the 12th column of the V matrix, which corresponds to the l
 This method generally prefers more data points than less. With more than 16 points, the numerical result tends to have very low uncertainly and decently low square error.
 
 ### Fundamental matrix
+
+1. Remember there are two SVD to perform. To check your sanity, remember the final result should be the estiamted fundamental matrix, usually denoted as $\hat{F}$, which should have rank 2. However, the result from the first SVD should have a F of rank 3.
+
+2. To draw the epipolar lines, there is a trick based on the point-line duality.
+	1. If we have the two end points of a line, we can easily draw it. 
+	2. Intuitively, finding two end points from the leftmost and the rightmost, which are the intersects between the epipolar line and the edge lines of the frame.
+	3. These two intersects can be computed via cross product, e.g. $p_1 = L_{left}\times L_{epipolar}$, where $L_{left}$ is just (1,0,0). Similarly, $L_{right}$ would be (1,0,width).
+	4. Obtain $p_1$ and $p_2$ and then draw the line at ease.
+
+3. What is slightly confusing is the different equations for epipolar lines. In the $p^TFp'=0$ relationship, the two lines are $L^T= p^TF$ and $L=Fp'$ respectively.
+4. Normalising the pixel location values beforehand brings about significant improvement. But rembmer to handle it with normalisation matrix, not some random dividing and subtraction constants.
