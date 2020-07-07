@@ -51,3 +51,16 @@ For SSE method, the disparity results are highly dependent on the actual scene. 
 Perhaps running a prior round of kernel to establish a contrast profile in the images would be helpful. Of course, since the regions of the same object are different from the 2 images, some smoothing is necessary.
 
 The NCC method inherently handles such situation with better tolerance. <mark>Therefore, for less noisy images, it can be argued that small-window NCC serves better as the default method.</mark>
+
+
+## PS3
+
+### Projective matrix via DLT (Direct Linear Transformation)
+
+Tolve solve the M matrix, the easist way is using SVD, i.e. $A = UDV^T$. 
+
+The solution will be the 12th column of the V matrix, which corresponds to the least non-zero singular value of A.
+
+This method generally prefers more data points than less. With more than 16 points, the numerical result tends to have very low uncertainly and decently low square error.
+
+### Fundamental matrix
