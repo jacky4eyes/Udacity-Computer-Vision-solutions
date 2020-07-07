@@ -6,7 +6,7 @@ Remember to enable the parallel computing toolbox for the parallel for loops etc
 
 **Progress**
 
-	- Complete: PS1, PS2
+	- Complete: PS1, PS2, PS3
 	- Ongoing: ?
 
 **What's below**
