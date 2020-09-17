@@ -58,11 +58,11 @@ The NCC method inherently handles such situation with better tolerance. <mark>Th
 
 ### Projective matrix via DLT (Direct Linear Transformation)
 
-Tolve solve the M matrix, the easist way is using SVD, i.e. $A = UDV^T$. 
+To solve the M matrix, the easist way is using SVD, i.e. $A = UDV^T$. 
 
 The solution will be the 12th column of the V matrix, which corresponds to the least non-zero singular value of A.
 
-This method generally prefers more data points than less. With more than 16 points, the numerical result tends to have very low uncertainly and decently low square error.
+Using this method, you generally prefer more data points than less, but to a moderate extent. With more than 16 points the numerical result already tends to have very low uncertainly and low square error.
 
 ### Fundamental matrix
 
