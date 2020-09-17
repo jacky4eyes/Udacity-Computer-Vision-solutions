@@ -20,15 +20,16 @@ Specific comments and highlights in some PS's.
 
 Very helpful training set, such as `./ps2_matlab/input/pair1-L.png` vs `./ps2_matlab/input/pair1-D_L.png`.
 
-### Disparity with SSE (sum of squared errors) method parameters implications
+### Disparity with SSE (sum of squared errors) method 
 
 1. Matching original image pairs using different window sizes (20 vs. 10)
-	- It is clear that the larger window size, the "smoother" the results, which is good for indication of main object  groups. However, the edges look distorted and some fine/small objects are missing.
-	- By contrast, a small window size will capture a lot more small objects and clearly defined edges, however with the introduction of more "noises".
+	- It is clear that with larger window size, the results become "smoother", which is good for indicating main object groups. However, the edges look more distorted and some fine/small objects are missing.
+	- By contrast, a small window size will capture many more small objects. It also defines edges more clearly. However, it introduces more "noises".
 2. Matching image pairs after adding moderate Gausian noises ($\sigma = 0.1$)
-	- The impact on smaller window size matching is heavier.
+	- The impact is heavier on smaller window size.
 3. Matching image pairs with brightness misalignment ($I_L\times1.1$)
 	- Performance decreases, i.e. the mismatch of the overall intensity between the images has significant negative impact on matching results. Both big and small window sizes are largely affected.
+	- The implication is that you probably want to ajudst the brightness of the images beforehand, so that they match.
 
 ### Disparity with NCC (normalized cross-correlation) method
 
