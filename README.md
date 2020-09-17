@@ -14,7 +14,7 @@ Remember to enable the parallel computing toolbox for the parallel for loops etc
 Specific comments and highlights in some PS's.
 
 
-## PS2
+# PS2
 
 ### Ground-true disparity data
 
