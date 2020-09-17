@@ -75,4 +75,4 @@ Using this method, you generally prefer more data points than less, but to a mod
 	4. Obtain $p_1$ and $p_2$ and then draw the line at ease.
 
 3. What is slightly confusing is the different equations for epipolar lines. In the $p^TFp'=0$ relationship, the two lines are $L^T= p^TF$ and $L=Fp'$ respectively.
-4. Normalising the pixel location values beforehand brings about significant improvement. But rembmer to handle it with normalisation matrix, not some random dividing and subtraction constants.
+4. Normalising the pixel location values beforehand brings about significant improvement. But remember to handle it with a normalisation matrix, not some random dividing and subtraction constants...
