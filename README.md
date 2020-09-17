@@ -68,7 +68,7 @@ Using this method, you generally prefer more data points than less, but to a mod
 
 1. Remember there are two SVD to perform. To check your sanity, remember the final result should be the estiamted fundamental matrix, usually denoted as $\hat{F}$, which should have rank 2. However, the result from the first SVD should have a F of rank 3.
 
-2. To draw the epipolar lines, there is a trick based on the point-line duality.
+2. To draw the epipolar lines on images, here is a trick based on the point-line duality:
 	1. If we have the two end points of a line, we can easily draw it. 
 	2. Intuitively, finding two end points from the leftmost and the rightmost, which are the intersects between the epipolar line and the edge lines of the frame.
 	3. These two intersects can be computed via cross product, e.g. $p_1 = L_{left}\times L_{epipolar}$, where $L_{left}$ is just (1,0,0). Similarly, $L_{right}$ would be (1,0,width).
