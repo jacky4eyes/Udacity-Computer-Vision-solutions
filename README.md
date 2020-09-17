@@ -37,21 +37,21 @@ Very helpful training set, such as `./ps2_matlab/input/pair1-L.png` vs `./ps2_ma
 2.  Matching original images (window size 20 vs. 10)
 	- Generally improvement over the SSE method. 
 	- For small window size, noticeable improvement. Much less noises, greater smoothness in the inner area of large objects.
-	- For big window size, more subtle improvement.
+	- For big window size, subtle improvement.
 3. Matching image pairs after adding moderate Gausian noises ($\sigma = 0.1$)
 	- The results show very low usability.
-	-  With big window size, some objects can be vaguely identified, while with small window size, matching can be regarded as complete failure.
+	- With big window size, some objects can be vaguely identified, while with small window size, matching fails completely.
 4. Matching image pairs with brightness misalignment ($I_L\times1.1$)
 	- Under this condition, the results are superior than those obtained via SSE.
 	- Both big and small window sizes are satisfactory.
 
-### Potential of adaptive window size
+### Potentiality of adaptive window size
 
 For SSE method, the disparity results are highly dependent on the actual scene. For a scene that contains both large low-contrast objects and clear-cut small objects, the best window sizes are different. Big objects needs big windows, and likewise for small objects.
 
-Perhaps running a prior round of kernel to establish a contrast profile in the images would be helpful. Of course, since the regions of the same object are different from the 2 images, some smoothing is necessary.
+Perhaps running a prior round with big kernel to establish a contrast profile in the images would be helpful. Of course, since the regions of the same object are different in the two images, some smoothing is necessary.
 
-The NCC method inherently handles such situation with better tolerance. <mark>Therefore, for less noisy images, it can be argued that small-window NCC serves better as the default method.</mark>
+The NCC method inherently handles such situation with better tolerance. <mark>Therefore, for less noisy images, a small-window NCC arguably serves better as the default method.</mark>
 
 
 # PS3
