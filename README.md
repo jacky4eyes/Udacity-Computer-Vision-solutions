@@ -11,7 +11,7 @@ Remember to enable the parallel computing toolbox for the parallel for loops etc
 
 **What's below**
 
-Specific comments and noteworthy discussions in some PS's.
+Specific comments and highlights in some PS's.
 
 
 ## PS2
