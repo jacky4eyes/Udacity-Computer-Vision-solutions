@@ -1,51 +1,67 @@
-%% Part 1: Harris corners
+%% Part 1 : Harris corners
+
+transA = double(imread('./input/transA.jpg'))/255;
+simA =  double(imread('./input/simA.jpg'))/255;
+
+g_size = 7;
+sigma = 1.5;
+
+[transA_x, transA_y] = gaussian_gradient(transA,g_size,sigma);
+[simA_x, simA_y] = gaussian_gradient(simA,win_size,sigma);
+
+% convert to [0, 1]
+transA_x_disp = transA_x+0.5;
+transA_y_disp = transA_y+0.5;
+simA_x_disp = simA_x+0.5;
+simA_y_disp = simA_y+0.5;
+
+figure(1);delete(gca);delete(gca);
+subplot(2,3,1);hold on;axis tight
+imshow(transA)
+subplot(2,3,2);hold on;axis tight
+imshow(transA_x_disp)
+subplot(2,3,3);hold on;axis tight
+imshow(transA_y_disp )
 
 
-% ls ./input/transA.jpg
-A = imread('./input/transA.jpg');
-a = A(123,:);
+subplot(2,3,4);hold on;axis tight
+imshow(simA)
+subplot(2,3,5);hold on;axis tight
+imshow(simA_x_disp )
+subplot(2,3,6);hold on;axis tight
+imshow(simA_y_disp)
 
-% figure(1)
-% imshow(a)
+%% a
+transA_disp_combined = [transA_x_disp transA_x_disp];
+imwrite(transA_disp_combined,'./output/ps4-1-a-1.png')
+
+simA_disp_combined = [simA_x_disp simA_x_disp];
+imwrite(simA_disp_combined,'./output/ps4-1-a-2.png')
 
 
+%% b
 
-%% testing
-A = imread('./input/transA.jpg');
-win_size = 15;
-sigma = 3;
+w_size = 7;
+w_sigma = 1.2;
+W = fspecial('gaussian',w_size,w_sigma);
 
-x = (-floor(win_size/2)):floor(win_size/2);
-y = (1/(2*pi*sigma^2).^0.5)*exp(-x.^2./(2*sigma^2));
-z = y - [y(2:end) 0];
+transA_xx = transA_x.^2;
+transA_yy = transA_y.^2;
+transA_xy = transA_x.*transA_y;
 
-B1 = uint8(zeros(size(A)));
-for i = 1:size(A,1)
-    b1 = (filter(y,1,A(i,:)));
-    B1(i,:) = uint8(b1);
-end
-
-for j = 1:size(A,2)
-    b1 = (filter(y,1,B1(:,j)));
-    B1(:,j) = uint8(b1);
-end
-
-H = fspecial('gaussian',win_size,sigma);
-B2  = imfilter(A,H);
+imfilter(transA_xx ,W);
 
 
 
-figure(99);delete(gca);delete(gca);
-subplot(1,2,1);hold on
-imshow(B1)
-% plot(A(end,:))
-% plot(b1)
-% legend()
 
-subplot(1,2,2);hold on
-imshow(B2)
 
-%%
 
-figure(3)
-imshow(B1(57:end-43,57:end-43)-B2(50:end-50,50:end-50))
+
+
+
+
+
+
+
+
+
