@@ -81,15 +81,21 @@ Using this method, you generally prefer more data points than less, but to a mod
 
 ### Harris Corner
 
-overall procedure:
+Overall procedure:
 
-currently using a 0.995 quantile value as the threshold 
+1. Compute Gaussian derivative at each pixel
+2. Compute second moment matrix (M matrix) with a customised Gaussian Window
+3. Compute the R value; threshold it for corner points (my approach is a 0.995 quantile value)
+4. Apply non-local-minima filter (9x9 window etc.)
 
-low contrast region 
+Some points that cannot pick up
 
-This typora is very cool!
+- low contrast region, such as this:
 
+  ![image-20201017192403269](C:\Users\Jacky Han\AppData\Roaming\Typora\typora-user-images\image-20201017192403269.png)
 
-$$
-aaa
-$$
+  
+
+- 
+
+  
