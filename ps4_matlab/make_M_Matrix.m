@@ -1,4 +1,15 @@
-% return M, which has size (n_row, n_col, 4)
+%% return M, which has size (n_row, n_col, 4)
 function M = make_M_Matrix(I_x, I_y, W)
-    W
+    
+% get second-order derivatives
+    I_xx = I_x.^2;
+    I_yy = I_y.^2;
+    I_xy = I_x.*I_y;
+    
+    % make M
+    M = zeros([size(I_x) 4]);
+    M(:,:,1) = imfilter(I_xx ,W);
+    M(:,:,2) = imfilter(I_xy ,W);
+    M(:,:,3) = M(:,:,2);
+    M(:,:,4) = imfilter(I_yy ,W);
 end

@@ -25,11 +25,11 @@ Very helpful training set, such as `./ps2_matlab/input/pair1-L.png` vs `./ps2_ma
 1. Matching original image pairs using different window sizes (20 vs. 10)
 	- It is clear that with larger window size, the results become "smoother", which is good for indicating main object groups. However, the edges look more distorted and some fine/small objects are missing.
 	- By contrast, a small window size will capture many more small objects. It also defines edges more clearly. However, it introduces more "noises".
-2. Matching image pairs after adding moderate Gausian noises ($\sigma = 0.1$)
+2. Matching image pairs after adding moderate Gaussian noises ($\sigma = 0.1$)
 	- The impact is heavier on smaller window size.
 3. Matching image pairs with brightness misalignment ($I_L\times1.1$)
 	- Performance decreases, i.e. the mismatch of the overall intensity between the images has significant negative impact on matching results. Both big and small window sizes are largely affected.
-	- The implication is that you probably want to ajudst the brightness of the images beforehand, so that they match.
+	- The implication is that you probably want to adjust the brightness of the images beforehand, so that they match.
 
 ### Disparity with NCC (normalized cross-correlation) method
 
@@ -38,7 +38,7 @@ Very helpful training set, such as `./ps2_matlab/input/pair1-L.png` vs `./ps2_ma
 	- Generally improvement over the SSE method. 
 	- For small window size, noticeable improvement. Much less noises, greater smoothness in the inner area of large objects.
 	- For big window size, subtle improvement.
-3. Matching image pairs after adding moderate Gausian noises ($\sigma = 0.1$)
+3. Matching image pairs after adding moderate Gaussian noises ($\sigma = 0.1$)
 	- The results show very low usability.
 	- With big window size, some objects can be vaguely identified, while with small window size, matching fails completely.
 4. Matching image pairs with brightness misalignment ($I_L\times1.1$)
@@ -58,7 +58,7 @@ The NCC method inherently handles such situation with better tolerance. <mark>Th
 
 ### Projective matrix via DLT (Direct Linear Transformation)
 
-To solve the M matrix, the easist way is using SVD, i.e. $A = UDV^T$. 
+To solve the M matrix, the easiest way is using SVD, i.e. $A = UDV^T$. 
 
 The solution will be the 12th column of the V matrix, which corresponds to the least non-zero singular value of A.
 
@@ -66,13 +66,30 @@ Using this method, you generally prefer more data points than less, but to a mod
 
 ### Fundamental matrix
 
-1. Remember there are two SVD to perform. To check your sanity, remember the final result should be the estiamted fundamental matrix, usually denoted as $\hat{F}$, which should have rank 2. However, the result from the first SVD should have a F of rank 3.
-
+1. Remember there are two SVD to perform. To check your sanity, remember the final result should be the estimated fundamental matrix, usually denoted as $\hat{F}$, which should have rank 2. However, the result from the first SVD should have a F of rank 3.
 2. To draw the epipolar lines on images, here is a trick based on the point-line duality:
-	1. If we have the two end points of a line, we can easily draw it. 
-	2. Intuitively, finding two end points from the leftmost and the rightmost, which are the intersects between the epipolar line and the edge lines of the frame.
-	3. These two intersects can be computed via cross product, e.g. $p_1 = L_{left}\times L_{epipolar}$, where $L_{left}$ is just (1,0,0). Similarly, $L_{right}$ would be (1,0,width).
-	4. Obtain $p_1$ and $p_2$ and then draw the line at ease.
-
+  1. If we have the two end points of a line, we can easily draw it. 
+  2. Intuitively, finding two end points from the leftmost and the rightmost, which are the intersects between the epipolar line and the edge lines of the frame.
+  3. These two intersects can be computed via cross product, e.g. $p_1 = L_{left}\times L_{epipolar}$, where $L_{left}$ is just (1,0,0). Similarly, $L_{right}$ would be (1,0,width).
+  4. Obtain $p_1$ and $p_2$ and then draw the line at ease.
 3. What is slightly confusing is the different equations for epipolar lines. In the $p^TFp'=0$ relationship, the two lines are $L^T= p^TF$ and $L=Fp'$ respectively.
 4. Normalising the pixel location values beforehand brings about significant improvement. But remember to handle it with a normalisation matrix, not some random dividing and subtraction constants...
+
+
+
+# PS4
+
+### Harris Corner
+
+overall procedure:
+
+currently using a 0.995 quantile value as the threshold 
+
+low contrast region 
+
+This typora is very cool!
+
+
+$$
+aaa
+$$
