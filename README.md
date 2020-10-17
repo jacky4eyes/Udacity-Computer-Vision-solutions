@@ -88,14 +88,40 @@ Overall procedure:
 3. Compute the R value; threshold it for corner points (my approach is a 0.995 quantile value)
 4. Apply non-local-minima filter (9x9 window etc.)
 
-Some points that cannot pick up
+Strengths:
 
-- low contrast region, such as this:
+- Rotation invariant
+- A commonly perceived problem is the scale variability. But it isn't as serious as I expect. So the scale invariant methods aren't always necessary, e.g. Harris-Laplacian method.
+- However, if you are going to use SIFT descriptor later, you will need to manually specify the scale as a parameter.
 
-  ![image-20201017192403269](C:\Users\Jacky Han\AppData\Roaming\Typora\typora-user-images\image-20201017192403269.png)
+Some corner points that a generic approach won't pick up
 
-  
+- low contrast region, such as white roof-top with greyish sky as background
+- fine details, such as legs of chairs in a far distance.
 
-- 
+### SIFT descriptor
 
-  
+Using the ```VLFeat``` library for SIFT descriptor to avoid fiddly work. Also, they have a very nice tight subplot function ```tightsubplot```:
+
+```matlab
+figure(1)
+tightsubplot(1,2,1);
+imshow(img1)
+tightsubplot(1,2,2);
+imshow(img2)
+```
+
+Two main functions are used here:
+
+1. ```vl_sift```, which takes the interest points' locations and the gradient directions as inputs, and it returns 2 variables, ```f``` and ```d```.
+   - ```f``` is known as "a frame", whose elements are x, y coordinates, scale and orientation `f(4)`
+   - Each column of ```d``` is a 128-vector for that point.
+2. ```vl_ubcmatch```, which performs the matching algorithm.
+   - Inputs are the descriptors from both images.
+
+Call help function for more detailed explanations.
+
+### RANSAC
+
+...
+

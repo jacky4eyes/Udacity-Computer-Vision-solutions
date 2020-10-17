@@ -3,7 +3,7 @@
 % 2) suppres elements that are not local maxima.
 function R_sup = local_nonmax_suppress(R,local_size)
 
-    th = quantile(reshape(R,1,[]),0.995);
+    th = quantile(reshape(R,1,[]),0.98);
     R_temp = R;
     R_temp(R<th) = 0;
     R_sup = zeros(size(R));    

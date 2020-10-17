@@ -30,3 +30,12 @@ B3x = uint8(zeros(size(B)));
 B3x(:,1:end-1) = B(:,2:end) - B(:,1:end-1);  
 % B3x(:,2:end) = B(:,2:end) - B(:,1:end-1);  
 % B3x = imfilter(B,diff_x);
+
+
+%% plot sift descriptor "frame" direction histograms
+
+
+[f,d] = vl_sift(single(transA*255),'frames',fc);
+perm = randperm(size(f,2)) ;
+sel = perm(1:5);
+h1 = vl_plotsiftdescriptor(d(:,sel),f(:,sel)); 

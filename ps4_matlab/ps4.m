@@ -83,7 +83,7 @@ imwrite(simB_Rmat_disp,'./output/ps4-1-b-4.png')
 
 %% 1-c not-local-maxima suppression and marking corners
 
-local_size = 9;
+local_size = 15;
 transA_Rsup = local_nonmax_suppress(transA_Rmat, local_size);
 simA_Rsup = local_nonmax_suppress(simA_Rmat, local_size);
 transB_Rsup = local_nonmax_suppress(transB_Rmat, local_size);
@@ -112,20 +112,79 @@ imwrite(simA_newdisp,'./output/ps4-1-c-3.png')
 imwrite(simB_newdisp,'./output/ps4-1-c-4.png')
 
 
-%%
+%% Part 2: SIFT descriptor 
+% 2-a plot the assigned orientation
+
+transA_grad_dir = atan2(transA_y,transA_x);
+transB_grad_dir = atan2(transB_y,transB_x);
+
+transA_fc = prep_fc_for_sift(transA_Rsup,transA_grad_dir,10);
+transB_fc = prep_fc_for_sift(transB_Rsup,transB_grad_dir,8);
+
+[transA_f,transA_d] = vl_sift(single(transA*255),'frames',transA_fc);
+[transB_f,transB_d] = vl_sift(single(transB*255),'frames',transB_fc);
+
+figure(5)
+tightsubplot(1,2,1);
+imshow(transA)
+h = vl_plotframe(transA_f); set(h,'color','cyan','linewidth',1) ;
+tightsubplot(1,2,2);
+imshow(transB)
+h = vl_plotframe(transB_f); set(h,'color','cyan','linewidth',1) ;
+
+print(gcf, '-dpng', './output/ps4-2-a-1.png')
 
 
+simA_grad_dir = atan2(simA_y,simA_x);
+simB_grad_dir = atan2(simB_y,simB_x);
+
+simA_fc = prep_fc_for_sift(simA_Rsup,simA_grad_dir,8);
+simB_fc = prep_fc_for_sift(simB_Rsup,simB_grad_dir,8);
+
+[simA_f,simA_d] = vl_sift(single(simA*255),'frames',simA_fc);
+[simB_f,simB_d] = vl_sift(single(simB*255),'frames',simB_fc);
+
+figure(6)
+tightsubplot(1,2,1);
+imshow(simA)
+h = vl_plotframe(simA_f); set(h,'color','cyan','linewidth',1) ;
+tightsubplot(1,2,2);
+imshow(simB)
+h = vl_plotframe(simB_f); set(h,'color','cyan','linewidth',1) ;
+
+print(gcf, '-dpng', './output/ps4-2-a-2.png')
 
 
+%% 2-b find putative matches
 
+[trans_matches,trans_scores] = vl_ubcmatch(transA_d,transB_d);
+trans_combined = [transA transB];
+figure(7)
+tightsubplot(1,1,1);
+imshow(trans_combined)
+hold on
+for i = 1:size(trans_matches,2)
+    plot([transA_fc(1,trans_matches(1,i)) size(transA,2)+transB_fc(1,trans_matches(2,i))],...
+    [transA_fc(2,trans_matches(1,i)) transB_fc(2,trans_matches(2,i))],'cyan','linewidth',1);
+end
 
+print(gcf, '-dpng', './output/ps4-2-b-1.png')
 
+[sim_matches,sim_scores] = vl_ubcmatch(simA_d,simB_d);
+sim_combined = [simA simB];
 
+figure(8)
+tightsubplot(1,1,1);
+imshow(sim_combined)
+hold on
+for i = 1:size(sim_matches,2)
+    plot([simA_fc(1,sim_matches(1,i)) size(simA,2)+simB_fc(1,sim_matches(2,i))],...
+    [simA_fc(2,sim_matches(1,i)) simB_fc(2,sim_matches(2,i))],'cyan','linewidth',1);
+end
 
+print(gcf, '-dpng', './output/ps4-2-b-2.png')
 
-
-
-
+%% Part 3: RANSAC
 
 
 
