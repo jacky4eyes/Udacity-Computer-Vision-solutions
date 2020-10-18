@@ -1,0 +1,16 @@
+function C = RANSAC_for_translation(matches, outlier_rate, L2_norm_cutoff)
+    params_dim = 1;
+    N = ceil(log(1-desired_success_rate) / log(1-(1-outlier_rate)^params_dim));
+    C = [0;0];
+    for i = 1:N
+        rand_order = randperm(size(matches,2));
+        this_sample = matches(:,rand_order(1));
+        other_sample= matches(:,rand_order(2:end));
+        L2_norm = sum((this_sample - other_sample).^2,1).^0.5;   
+        C_i = [this_sample other_sample(:,L2_norm<L2_norm_cutoff)];
+        if size(C_i,2)>size(C,2)
+            C = C_i;
+        end   
+    end
+
+end

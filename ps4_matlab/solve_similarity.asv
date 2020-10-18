@@ -1,0 +1,7 @@
+%% solve similarity transform parameter vector p
+% using the least squares problem formulation (refer to Szeliski's book)
+% input the interest points' location in this manner:
+% X = [x_1 x2 ... xn; y1 y2 ... yn];
+% X_prime = [x_prime_1 ... x_prime_n; y_prime_1 ... y_prime_n];
+function p = solve_similarity(X,X_prime)
+end

@@ -114,7 +114,7 @@ imshow(img2)
 Two main functions are used here:
 
 1. ```vl_sift```, which takes the interest points' locations and the gradient directions as inputs, and it returns 2 variables, ```f``` and ```d```.
-   - ```f``` is known as "a frame", whose elements are x, y coordinates, scale and orientation `f(4)`
+   - ```f``` is known as "a frame", whose elements are x, y coordinates, scale and orientation.
    - Each column of ```d``` is a 128-vector for that point.
 2. ```vl_ubcmatch```, which performs the matching algorithm.
    - Inputs are the descriptors from both images.
@@ -123,5 +123,13 @@ Call help function for more detailed explanations.
 
 ### RANSAC
 
-...
+Translation pair:
+
+- In the matches obtained by ``vl_ubcmatch``, a scatter plot may show multiple clusters, which is result of having different translations in different regions of the image (e.g. two separate objects).
+- In this case, when you run RANSAC, the results tend to diverge.
+- 
+
+Some further comments
+
+- When checking the RANSAC results, you may realise that the parameters you use for Harris detector or SIFT descriptor have to be improved. So prepare for <mark>some iterative work</mark>, and make your code's instructions clean and clear.
 

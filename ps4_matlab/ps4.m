@@ -83,7 +83,7 @@ imwrite(simB_Rmat_disp,'./output/ps4-1-b-4.png')
 
 %% 1-c not-local-maxima suppression and marking corners
 
-local_size = 15;
+local_size = 11;
 transA_Rsup = local_nonmax_suppress(transA_Rmat, local_size);
 simA_Rsup = local_nonmax_suppress(simA_Rmat, local_size);
 transB_Rsup = local_nonmax_suppress(transB_Rmat, local_size);
@@ -118,7 +118,7 @@ imwrite(simB_newdisp,'./output/ps4-1-c-4.png')
 transA_grad_dir = atan2(transA_y,transA_x);
 transB_grad_dir = atan2(transB_y,transB_x);
 
-transA_fc = prep_fc_for_sift(transA_Rsup,transA_grad_dir,10);
+transA_fc = prep_fc_for_sift(transA_Rsup,transA_grad_dir,8);
 transB_fc = prep_fc_for_sift(transB_Rsup,transB_grad_dir,8);
 
 [transA_f,transA_d] = vl_sift(single(transA*255),'frames',transA_fc);
@@ -185,6 +185,79 @@ end
 print(gcf, '-dpng', './output/ps4-2-b-2.png')
 
 %% Part 3: RANSAC
+% 3-a the translation image pair
+clc;
+desired_success_rate = 0.998;
+outlier_rate = 0.9;
+L2_norm_cutoff = 15;
+all_dx = transB_f(1,trans_matches(2,:)) - transA_f(1,trans_matches(1,:));
+all_dy = transB_f(2,trans_matches(2,:)) - transA_f(2,trans_matches(1,:));
+all_dX = [all_dx; all_dy];
+
+% the elements of C is the index for trans_matches
+C = RANSAC_translation(all_dX,outlier_rate,desired_success_rate,L2_norm_cutoff)
+avg_trans= mean(all_dX(:,C),2)
+
+figure(9);tightsubplot(1,1,1);
+imshow(trans_combined)
+hold on
+for i = 1:size(C,2)
+    plot([transA_fc(1,trans_matches(1,C)); size(transA,2)+transB_fc(1,trans_matches(2,C))],...
+    [transA_fc(2,trans_matches(1,C)); transB_fc(2,trans_matches(2,C))],'yellow','linewidth',2);
+end
+title(sprintf('average translation vector: (%f, %f)',avg_trans(1),avg_trans(2)));
+print(gcf, '-dpng', './output/ps4-3-a-1.png')
+
+
+%% 3-b the similarity image pair
+clc;
+desired_success_rate = 0.995;
+outlier_rate = 0.8;
+L2_norm_cutoff = 9;
+
+C = RANSAC_similarity(simA_fc,simB_fc,sim_matches, outlier_rate, desired_success_rate, L2_norm_cutoff);
+
+X = simA_fc(1:2,sim_matches(1,C));
+X_prime = simB_fc(1:2,sim_matches(2,C));
+p = solve_similarity(X, X_prime);
+
+
+figure(10);tightsubplot(1,1,1);
+imshow(sim_combined)
+hold on
+for i = 1:size(C,2)
+    plot([simA_fc(1,sim_matches(1,C)); size(simA,2)+simB_fc(1,sim_matches(2,C))],...
+    [simA_fc(2,sim_matches(1,C)); simB_fc(2,sim_matches(2,C))],'yellow','linewidth',2);
+end
+title(sprintf('Consensus set''s similarity vector: (%f, %f, %f, %f)',p(1),p(2),p(3),p(4)));
+print(gcf, '-dpng', './output/ps4-3-b-1.png')
+
+
+
+
+%% 3-c fit an affine transform
+
+
+
+
+
+
+
+
+
+
+%%
+all_dx = transB_f(1,trans_matches(2,:)) - transA_f(1,trans_matches(1,:));
+all_dy = transB_f(2,trans_matches(2,:)) - transA_f(2,trans_matches(1,:));
+figure(88);
+scatter(all_dx,all_dy,100,'.')
+grid on;
+
+print(gcf, '-dpng', './output/trans_pair_dxdy_scatter.png')
+
+
+
+
 
 
 
