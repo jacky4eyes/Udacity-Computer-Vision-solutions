@@ -1,5 +1,5 @@
-%% determine the largest possible consensus set C
-% 
+%% Use RANSAC to determine the largest possible consensus set C (translation)
+% C contains the index for the matches array
 function C = RANSAC_translation(all_dX, outlier_rate, ...
     desired_success_rate, L2_norm_cutoff)
     matches_per_sample = 1;

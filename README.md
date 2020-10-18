@@ -6,8 +6,8 @@ Remember to enable the parallel computing toolbox for the parallel for loops etc
 
 **Progress**
 
-	- Complete: PS1, PS2, PS3
-	- Ongoing: PS4
+	- Complete: PS1, PS2, PS3, PS4
+	- Ongoing: ?
 
 **What's below**
 
@@ -81,20 +81,20 @@ Using this method, you generally prefer more data points than less, but to a mod
 
 ### Harris Corner
 
-Overall procedure:
+##### Overall procedure: #####
 
 1. Compute Gaussian derivative at each pixel
 2. Compute second moment matrix (M matrix) with a customised Gaussian Window
 3. Compute the R value; threshold it for corner points (my approach is a 0.995 quantile value)
 4. Apply non-local-minima filter (9x9 window etc.)
 
-Strengths:
+##### Strengths: #####
 
 - Rotation invariant
 - A commonly perceived problem is the scale variability. But it isn't as serious as I expect. So the scale invariant methods aren't always necessary, e.g. Harris-Laplacian method.
 - However, if you are going to use SIFT descriptor later, you will need to manually specify the scale as a parameter.
 
-Some corner points that a generic approach won't pick up
+##### Some corner points that a generic approach won't pick up
 
 - low contrast region, such as white roof-top with greyish sky as background
 - fine details, such as legs of chairs in a far distance.
@@ -118,18 +118,46 @@ Two main functions are used here:
    - Each column of ```d``` is a 128-vector for that point.
 2. ```vl_ubcmatch```, which performs the matching algorithm.
    - Inputs are the descriptors from both images.
+   - Output is the match array ```matches```.
 
 Call help function for more detailed explanations.
 
 ### RANSAC
 
-Translation pair:
+##### Translation images pair:
 
-- In the matches obtained by ``vl_ubcmatch``, a scatter plot may show multiple clusters, which is result of having different translations in different regions of the image (e.g. two separate objects).
-- In this case, when you run RANSAC, the results tend to diverge.
-- 
+- The unknown parameter ```p``` is a 2-vector.
+- Easier way is just treat each image pair's translation as (x_i, y_i), and fit a line on it.
+- In the matches obtained by ``vl_ubcmatch``, a scatter plot may show multiple clusters, which is result of having different translations in different regions of the image (e.g. two separate objects). In this case, when you run RANSAC, the results tend to diverge.
+- Be patient with the data structure. I advise this:
+  - Treat the consensus set C as an array of indices of the match array, namely ```matches```.
+  - The match array should contain the indices of the feature array , namely ```f```.
+- When the (local) scene really is translation, this method is very stable. 
 
-Some further comments
+##### Similarity images pair: #####
 
-- When checking the RANSAC results, you may realise that the parameters you use for Harris detector or SIFT descriptor have to be improved. So prepare for <mark>some iterative work</mark>, and make your code's instructions clean and clear.
+- The unknown parameter ```p``` is a 4-vector.
+- Use 2 pairs of images to explicitly solve ```p```, and then use ```p``` the transform the points from image A (i.e. ```X``` to ```X_prime```) , and then compare their distances against the predefined distance cutoff. Count the number falling within the cutoff and form a consensus set ```C_i```. As the last step, keep the largest ```C_i```.
+- My choice for the cutoff is 9.
+- It is worthwhile to start with more interest points. (500+?)
+
+##### Affine for the similarity pair #####
+
+- The unknown parameter ```p``` is a 6-vector.
+- Compared with the previous approach, this one is almost surely giving you more accurate results, but it may require more interests points in order to be more stable. 
+- To handle noise better, increase to distance cut-off level.
+
+##### Image warping #####
+
+- Helpful for sanity check.
+- Will contain quite a few high frequency noises.
+- My experience is that affine performs slightly better in the building facet, but not by much.
+- Easiest way is this:
+  1. Create blank image the same size as A
+  2. For each row i and column j, apply transform (similarity/affine matrix etc.) and get the index supposed to be on image B. Sample that.
+  3. Now that you have a B-warped, take advantage of the colour channels and make overlay image for visualisation.
+
+##### Some further comments #####
+
+- When checking the RANSAC results, you may realise that the previous parameters used in running Harris detector or SIFT descriptor have to be improved. So prepare for <mark>some iterative work</mark>, and make your code's instructions clean and clear.
 
