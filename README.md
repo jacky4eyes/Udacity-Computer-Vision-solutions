@@ -7,7 +7,7 @@ Remember to enable the parallel computing toolbox for the parallel for loops etc
 **Progress**
 
 	- Complete: PS1, PS2, PS3, PS4
-	- Ongoing: ?
+	- Ongoing: PS5
 
 **What's below**
 
@@ -101,13 +101,13 @@ Using this method, you generally prefer more data points than less, but to a mod
 
 ### SIFT descriptor
 
-Using the ```VLFeat``` library for SIFT descriptor to avoid fiddly work. Also, they have a very nice tight subplot function ```tightsubplot```:
+Using the ```VLFeat``` library for SIFT descriptor to avoid fiddly work. Also, they have a very nice tight subplot function ```vl_tightsubplot```:
 
 ```matlab
 figure(1)
-tightsubplot(1,2,1);
+vl_tightsubplot(1,2,1);
 imshow(img1)
-tightsubplot(1,2,2);
+vl_tightsubplot(1,2,2);
 imshow(img2)
 ```
 
