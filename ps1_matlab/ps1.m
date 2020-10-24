@@ -2,8 +2,8 @@
 %
 % Jacky general notes:
 %
-% A problem set is aimed at familiarising with Hough transform and how to 
-% implement edge detection with paramatric models.
+% This problem set is aimed at familiarising with Hough transform and how 
+% to implement edge detection with paramatric models.
 %
 % This is a massive work and I didn't expect spending so much time on a
 % relatively straightforward algorithm. This is partly due to the fact that 
@@ -19,7 +19,10 @@
 % earlier questions. I personally don't see there is a point of making
 % the functions as robust as possible, and thus they are left as the
 % way they were.
-%
+
+addpath(genpath('../utilities'));
+
+
 %% 1-a
 clc;
 img = imread(fullfile('input', 'ps1-input0.png'));  % already grayscale

@@ -1,3 +1,7 @@
+%% ps4
+
+addpath(genpath('../utilities'));
+
 %% Part 1 : Harris corners
 
 transA = double(imread('./input/transA.jpg'))/255;

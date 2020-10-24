@@ -1,5 +1,11 @@
-%%
+%% ps3
+
+addpath(genpath('../utilities'));
+
+
 %%  1a verifying function
+
+
 clc; 
 
 file_2d = fopen('./input/pts2d-norm-pic_a.txt','r');

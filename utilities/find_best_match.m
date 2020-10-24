@@ -1,4 +1,6 @@
-function [y,best_col, best_patch] = find_best_match(patch_in, strip_in)
+%% find the best matching score, index and patch window
+% [y, best_col, best_patch] = find_best_match(patch_in, strip_in)
+function [y, best_col, best_patch] = find_best_match(patch_in, strip_in)
     p_size = size(patch_in,2);
     s_size = size(strip_in,2);
     patch_norm = patch_in./sum(sum(patch_in));    

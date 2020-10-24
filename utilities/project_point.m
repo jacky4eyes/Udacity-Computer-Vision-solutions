@@ -1,3 +1,5 @@
+%%
+% p_img = project_point(p, f)
 function p_img = project_point(p, f)
     PM = [1 0 0 0; 0 1 0 0; 0 0 1/f 0];
     p_img_homo = PM * [p 0]';

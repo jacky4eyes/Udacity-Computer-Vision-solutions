@@ -1,15 +1,12 @@
-%% ps5
+%% ps5 
+
+addpath(genpath('..'));  % add all function exist in the 
 
 
-[x_grid,y_grid] = meshgrid(1:40, 1:30);
-
-I_rx = x_grid/100;
-I_ry = y_grid/100;
-
-cumsum(I_rx,)
+figure(1);vl_tightsubplot(1,1,1);
+imshow(I);
 
 
 
 %%
 
-cumsum([1 3 5])

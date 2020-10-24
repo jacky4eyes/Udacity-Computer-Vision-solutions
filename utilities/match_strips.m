@@ -1,8 +1,12 @@
+%%
+% disparity = match_strips(strip_L, strip_R, b)
+%
+% For each non-overlapping patch/block of width b in the left strip, find 
+% the best matching position (along X-axis) in the right strip.
+% Return a vector of disparities (left X-position - right X-position).
+% Note: Only consider whole blocks that fit within image bounds.
+
 function disparity = match_strips(strip_L, strip_R, b)
-    % For each non-overlapping patch/block of width b in the left strip,
-    %   find the best matching position (along X-axis) in the right strip.
-    % Return a vector of disparities (left X-position - right X-position).
-    % Note: Only consider whole blocks that fit within image bounds.
     num_of_col = size(strip_L,2);
     num_of_patch = floor(num_of_col / b);
     disparity = zeros([1 num_of_col ]);

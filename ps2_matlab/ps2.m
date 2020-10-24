@@ -1,4 +1,6 @@
-% ps2 Read these first
+% ps2 setup
+
+addpath(genpath('../utilities'));
 
 L = mean(im2double(imread(fullfile('input', 'pair1-L.png'))),3);
 R = mean(im2double(imread(fullfile('input', 'pair1-R.png'))),3);

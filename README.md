@@ -14,7 +14,19 @@ Remember to enable the parallel computing toolbox for the parallel for loops etc
 Specific comments and highlights in some PS's.
 
 
-# PS2
+
+
+
+# PS1
+
+Nothing important to state..
+
+
+
+
+
+
+# PS2 
 
 ### Ground-true disparity data
 
@@ -54,6 +66,9 @@ Perhaps running a prior round with big kernel to establish a contrast profile in
 The NCC method inherently handles such situation with better tolerance. <mark>Therefore, for less noisy images, a small-window NCC arguably serves better as the default method.</mark>
 
 
+
+
+
 # PS3
 
 ### Projective matrix via DLT (Direct Linear Transformation)
@@ -74,6 +89,8 @@ Using this method, you generally prefer more data points than less, but to a mod
   4. Obtain $p_1$ and $p_2$ and then draw the line at ease.
 3. What is slightly confusing is the different equations for epipolar lines. In the $p^TFp'=0$ relationship, the two lines are $L^T= p^TF$ and $L=Fp'$ respectively.
 4. Normalising the pixel location values beforehand brings about significant improvement. But remember to handle it with a normalisation matrix, not some random dividing and subtraction constants...
+
+
 
 
 
@@ -160,4 +177,10 @@ Call help function for more detailed explanations.
 ##### Some further comments #####
 
 - When checking the RANSAC results, you may realise that the previous parameters used in running Harris detector or SIFT descriptor have to be improved. So prepare for <mark>some iterative work</mark>, and make your code's instructions clean and clear.
+
+
+
+
+
+# PS5
 
