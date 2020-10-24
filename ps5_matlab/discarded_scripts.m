@@ -19,3 +19,7 @@ I(:,:,3) = I_b;
 
 figure(1);vl_tightsubplot(1,1,1);
 imshow(I);
+
+
+%% try swap 3D array axes
+
