@@ -1,4 +1,5 @@
-%% return M, which has size (n_row, n_col, 4)
+%% calculate M matrix, which has size (n_row, n_col, 4)
+% M = make_M_Matrix(I_x, I_y, W)
 function M = make_M_Matrix(I_x, I_y, W)
     
 % get second-order derivatives
