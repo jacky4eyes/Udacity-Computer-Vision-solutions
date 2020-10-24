@@ -1,6 +1,7 @@
 %% calculate M matrix, which has size (n_row, n_col, 4)
 % M = make_M_Matrix(I_x, I_y, W)
-% M = [sum(I_x*I_x)  sum(I_x*I_y);  sum(I_x*I_y)   sum(I_y*I_y)]
+% the first dimensions of M are the same as the source image
+% the third dimension of M is [sum(I_x*I_x) sum(I_x*I_y) sum(I_x*I_y) sum(I_y*I_y)]
 % W is the window (kernel with weights)
 function M = make_M_Matrix(I_x, I_y, W)
     
