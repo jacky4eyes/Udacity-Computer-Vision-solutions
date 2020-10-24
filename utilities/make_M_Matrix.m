@@ -4,7 +4,7 @@
 % W is the window (kernel with weights)
 function M = make_M_Matrix(I_x, I_y, W)
     
-    % get second-order derivatives
+    % get products of first-order derivatives
     I_xx = I_x.^2;
     I_yy = I_y.^2;
     I_xy = I_x.*I_y;
