@@ -184,3 +184,81 @@ Call help function for more detailed explanations.
 
 # PS5
 
+### Basic Lucas-Kanade
+
+##### window size and Gaussian sigma
+
+- For the pre-gradient filter, a Gaussian of size 15x15 and sigma=1 can be adopted. It doesn't matter too much.
+- For the M matrix window, ideally you can trial and error. I found that larger and heavier filters tend to be more consistent.
+
+##### Applicable scenarios
+
+- It works fine if the displacement is just 1~2 pixels.
+
+- If the displacement is more than 2 pixels, then this method cannot work. Blurring heavily can help find smoother optical flow fields, but the displacement magnitude will be significantly skewed. 
+
+- By heavy, I mean sigma = 9. It feels quite excessive. But without it, the motion vector result is so noisy.
+
+- To solve this, hierarchical approach is needed.
+
+  
+
+
+
+
+
+
+
+# MATLAB plotting tips
+
+#### refresh stuff in the same figure window without old stuff sticking around
+
+```matlab
+% this will remove all the colorbars and etc. existing in your figure
+% it won't crash even if you haven't created any figure object.
+ccc = gcf;
+delete(ccc.Children);
+
+figure(1);
+subplot(1,1,1);
+imshow(im1);
+colorbar('SouthOutside');
+colormap(gca,jet(100));
+
+```
+
+#### two subplots sharing the same scale of colormap
+
+```matlab
+% first determine the range
+% then set the color axis to manual before running the colorbar function
+U_min = min(min(U));
+U_max = max(max(U));
+V_min = min(min(V));
+V_max = max(max(V));
+
+bottom = min(U_min,V_min);
+top = max(U_max,V_max);
+
+figure(2);
+
+subplot(1,2,1);
+imagesc(U)
+caxis manual;
+caxis([bottom top]);
+colorbar('SouthOutside');
+colormap(gca,jet(100))
+
+subplot(1,2,2);
+imagesc(V)
+caxis manual;
+caxis([bottom top]);
+colorbar('SouthOutside');
+colormap(gca,jet(100))
+
+```
+
+
+
+
+
