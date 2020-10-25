@@ -189,7 +189,7 @@ Call help function for more detailed explanations.
 ##### window size and Gaussian sigma
 
 - For the pre-gradient filter, a Gaussian of size 15x15 and sigma=1 can be adopted. It doesn't matter too much.
-- For the M matrix window, ideally you can trial and error. I found that larger and heavier filters tend to be more consistent.
+- For the M matrix summation, there is a window function. (mentioned Harris detector chapter). Ideally you should do some trial and error. Nonetheless, I found that larger and heavier filters tend to be more consistent.
 
 ##### Applicable scenarios
 

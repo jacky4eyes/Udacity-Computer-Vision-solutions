@@ -1,6 +1,9 @@
 %% ps5 
 clear all; clc;
-addpath(genpath('..'));  % add all function exist in the 
+
+% first, make sure your current directory is where this script is
+% then add to path all functions essential to this project
+addpath(genpath('../utilities'));  
 
 
 %% 1 Lucas Kanade optical flow
@@ -47,13 +50,13 @@ h1 = fspecial('gauss', 25, 9);
 [U_R2, V_R2] = solve_LK_flow(Ix,Iy,It_R2,h1);
 [U_R5U5, V_R5U5] = solve_LK_flow(Ix,Iy,It_R5U5,h1);
 
-% ccc = gcf;
-% delete(ccc.Children);
+ccc = gcf;
+delete(ccc.Children);
 plot_optical_flow_displacement(2,U_R2,V_R2)
 print(gcf, '-dpng', './output/ps5-1-a-1.png')
 
-% ccc = gcf;
-% delete(ccc.Children);
+ccc = gcf;
+delete(ccc.Children);
 H = plot_optical_flow_displacement(2,U_R5U5,V_R5U5);
 print(gcf, '-dpng', './output/ps5-1-a-2.png')
 
@@ -74,14 +77,13 @@ delete(ccc.Children);
 plot_optical_flow_displacement(2,U_R10,V_R10)
 print(gcf, '-dpng', './output/ps5-1-b-1.png')
 
-%%
+
 [U_R20, V_R20] = solve_LK_flow(Ix,Iy,It_R20,h1);
 ccc = gcf;
 delete(ccc.Children);
 plot_optical_flow_displacement(2,U_R20,V_R20)
 print(gcf, '-dpng', './output/ps5-1-b-2.png')
 
-%%
 
 [U_R40, V_R40] = solve_LK_flow(Ix,Iy,It_R40,h1);
 ccc = gcf;
@@ -90,5 +92,9 @@ plot_optical_flow_displacement(2,U_R40,V_R40)
 print(gcf, '-dpng', './output/ps5-1-b-3.png')
 
 
+%% 2a
+
+
+a 
 
 

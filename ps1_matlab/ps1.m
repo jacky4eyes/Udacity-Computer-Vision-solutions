@@ -20,7 +20,9 @@
 % the functions as robust as possible, and thus they are left as the
 % way they were.
 
-addpath(genpath('../utilities'));
+% first, make sure your current directory is where this script is
+% then add to path all functions essential to this project
+addpath(genpath('../utilities'));  
 
 
 %% 1-a

@@ -1,7 +1,11 @@
-% ps2 setup
+%% ps2 
 
-addpath(genpath('../utilities'));
+% first, make sure your current directory is where this script is
+% then add to path all functions essential to this project
+addpath(genpath('../utilities'));  
 
+
+%% setup
 L = mean(im2double(imread(fullfile('input', 'pair1-L.png'))),3);
 R = mean(im2double(imread(fullfile('input', 'pair1-R.png'))),3);
 L_true = im2double(imread(fullfile('input', 'pair1-D_L.png')));

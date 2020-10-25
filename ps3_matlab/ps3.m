@@ -1,6 +1,8 @@
 %% ps3
 
-addpath(genpath('../utilities'));
+% first, make sure your current directory is where this script is
+% then add to path all functions essential to this project
+addpath(genpath('../utilities'));  
 
 
 %%  1a verifying function
