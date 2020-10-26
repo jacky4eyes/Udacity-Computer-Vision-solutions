@@ -9,8 +9,8 @@ function [U,V] = solve_LK_flow(Ix, Iy, It, h)
     % RHS of LK equation
     temp1 = make_M_Matrix(Ix,It,h);     
     temp2 = make_M_Matrix(Iy,It,h);     
-    r1 = -temp1(:,:,2);               % the sum of I_x*I_t
-    r2 = -temp2(:,:,2);               % the sum of I_y*I_t
+    r1 = -temp1(:,:,2);               % the sum of -I_x*I_t
+    r2 = -temp2(:,:,2);               % the sum of -I_y*I_t
 
     % initialise output arrays
     U = zeros(size(Ix));

@@ -13,7 +13,9 @@ Remember to enable the parallel computing toolbox for the parallel for loops etc
 
 Specific comments and highlights in some PS's.
 
+More technical details are in the comments in the codes. But more of them are in my study notes.
 
+Use this a quick brush-up and reminder of what this course is about.
 
 
 
@@ -186,10 +188,10 @@ Call help function for more detailed explanations.
 
 ### Basic Lucas-Kanade
 
-##### window size and Gaussian sigma
+##### <mark> window size and Gaussian sigma </mark>
 
-- For the pre-gradient filter, a Gaussian of size 15x15 and sigma=1 can be adopted. It doesn't matter too much.
-- For the M matrix summation, there is a window function. (mentioned Harris detector chapter). Ideally you should do some trial and error. Nonetheless, I found that larger and heavier filters tend to be more consistent.
+- For the pre-gradient filter, a 15x15 Gaussian kernel with sigma=1 is good. But It doesn't matter too much.
+- There is a window function in the M matrix summation step as well. (mentioned Harris detector chapter). Ideally, you should do some trial and error. Nonetheless, I found that larger and heavier filters tend to be more consistent.  As a simple first attempt, go for 25x25 Gaussian kernel with sigma=3.
 
 ##### Applicable scenarios
 
@@ -201,7 +203,6 @@ Call help function for more detailed explanations.
 
 - To solve this, hierarchical approach is needed.
 
-  
 
 ### Gaussian and Laplacian Pyramids implementation
 
@@ -222,6 +223,34 @@ Call help function for more detailed explanations.
   - n_2 = (n_1+1)/2
   - n_3 = (n_2+1)/2
   - n_4 = (n_3+1)/2
+
+### Image warping
+
+##### What do we do after obtaining the velocity?
+
+- Say we have im1 and im2, and we have finished the LK optical flow computation. Now we have ```[u12, v12]```.
+
+- Warp it via ```interp2``` function is the easiest way in MATLAB.
+
+  ```matlab
+  [x_grid,y_grid] = meshgrid(1:size(im1,2),1:size(im1,1));
+  im2_warped = interp2(x_grid,y_grid,im2,x_grid+U12,y_grid+V12,'*linear');
+  im2_warped(isnan(im2_warped)) = 0;
+  ```
+
+- The 4th and 5th argument to the function ```interp2``` are the so-called query grid.  Basically, we request the values from this location: the old grid plus the displacement. 
+
+- Later, we compare this pixel value with the corresponding value in im1 based on the old grid.
+
+##### Measuring warping quality (or velocity accuracy)
+
+- I think a simple RMSE over the whole image area will do.
+
+
+
+
+
+
 
 # MATLAB plotting tips
 
