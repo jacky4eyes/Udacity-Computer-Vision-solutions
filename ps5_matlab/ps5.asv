@@ -92,20 +92,12 @@ plot_optical_flow_displacement(2,U_R40,V_R40)
 print(gcf, '-dpng', './output/ps5-1-b-3.png')
 
 
-%% 2 setup
+%% 2a
 
 clc
 yos_1 = double(imread('input/DataSeq1/yos_img_01.jpg'))/255;
 yos_2 = double(imread('input/DataSeq1/yos_img_02.jpg'))/255;
 yos_3 = double(imread('input/DataSeq1/yos_img_03.jpg'))/255;
-
-% need to be resized for the pyramid purpose:
-
-yos_1 = yos_1(6:end-6,6:end-6);
-yos_2 = yos_2(6:end-6,6:end-6);
-yos_3 = yos_3(6:end-6,6:end-6);
-
-%% 2-a
 
 ccc = gcf;
 delete(ccc.Children);
@@ -141,8 +133,33 @@ imshow(g3)
 
 print(gcf, '-dpng', './output/ps5-2-a-1.png')
 
+%%
+temp = (size(yos_1)-1)
+for i = 1:4
+    temp = (temp+1)/2
+end
+
 %% 2b
 
+% W = h'*h;
+% h_L = size(W,1);
+% h_halfL = (h_L-1)/2;
+% 
+% g3_1 = zeros(size(g2));
+% for i = 1:size(g3_1,1)
+%     for j = 1:size(g3_1,2)
+%         for m = -h_halfL:h_halfL 
+%             for n = -h_halfL:h_halfL 
+%                 ind_m = (i-m)/2;
+%                 ind_n = (j-n)/2;
+%                 if (mod(ind_m,1)==0) && (mod(ind_n,1)==0) && (ind_m>0) && (ind_n>0)
+%                     w = W(m+(h_L+1)/2,n+(h_L+1)/2);
+%                     g3_1(i,j) = g3_1(i,j)+ 4*w.*g3(ind_m,ind_n);
+%                 end
+%             end
+%         end
+%     end
+% end
 g3_1 = EXPAND_1_level(g3,h);
 L2 = g2 - g3_1;
 g2_1 = EXPAND_1_level(g2,h);
@@ -163,10 +180,9 @@ imshow(L1)
 vl_tightsubplot(1,4,4);
 imshow(L0)
 
-print(gcf, '-dpng', './output/ps5-2-b-1.png')
 
 
-%% 
+
 
 
 

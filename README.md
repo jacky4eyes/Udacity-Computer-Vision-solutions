@@ -203,11 +203,25 @@ Call help function for more detailed explanations.
 
   
 
+### Gaussian and Laplacian Pyramids implementation
 
+##### REDUCE operator
 
+- Apply smoothing kernel and then take every other pixels' value.
+- The kernel can be different from Gaussian function (don't know why Burt and Adelson used the term Gaussian) .
 
+##### EXPAND operator
 
+- Create an empty array double the size of the current level, and then sample the values from this layer when appropriate.
+- Read the paper or my note to brush exactly how this works.
 
+##### Size of the original image
+
+- if you decide you want to create a four-level pyramid, then check whether all these are integers:
+  - n_1 = (n_0+1)/2
+  - n_2 = (n_1+1)/2
+  - n_3 = (n_2+1)/2
+  - n_4 = (n_3+1)/2
 
 # MATLAB plotting tips
 
