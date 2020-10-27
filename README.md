@@ -246,6 +246,18 @@ Call help function for more detailed explanations.
 
 - I think a simple RMSE over the whole image area will do.
 
+### Hierarchical Lucas-Kanade
+
+
+
+Excessive levels of  Gaussian downsampling is unfavourable.
+
+Recommended number of levels: for displacement x, go for log2(x). 
+
+The size of the images in TestSeq is too awkward to perform 6-level pyramid...
+
+My Yosemite sequence motion looks pretty good! (visualised from warping result)
+
 
 
 
