@@ -252,6 +252,7 @@ Call help function for more detailed explanations.
 
 - Excessive levels of  Gaussian downsampling are unfavourable.
 - Recommended number of levels: for displacement x, use N = log_2(x). 
+- From later chapters, it is learned that translation models usually aren't very good for large displacements
 
 ##### problem set related
 
