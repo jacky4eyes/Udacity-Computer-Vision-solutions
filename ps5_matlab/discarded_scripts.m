@@ -21,5 +21,10 @@ figure(1);vl_tightsubplot(1,1,1);
 imshow(I);
 
 
-%% try swap 3D array axes
+%% check whether image size is good for pyramid
+clc
+temp = size(jg0);
+for i = 1:6
+    temp = (temp+1)./2
+end
 

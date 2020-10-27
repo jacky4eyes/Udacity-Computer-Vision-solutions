@@ -248,19 +248,17 @@ Call help function for more detailed explanations.
 
 ### Hierarchical Lucas-Kanade
 
+##### general comments
 
+- Excessive levels of  Gaussian downsampling are unfavourable.
+- Recommended number of levels: for displacement x, use N = log_2(x). 
 
-Excessive levels of  Gaussian downsampling is unfavourable.
+##### problem set related
 
-Recommended number of levels: for displacement x, go for log2(x). 
-
-The size of the images in TestSeq is too awkward to perform 6-level pyramid...
-
-My Yosemite sequence motion looks pretty good! (visualised from warping result)
-
-
-
-
+- The size of the images in TestSeq is too awkward to perform 6-level pyramid...
+- My Yosemite sequence motion looks pretty good! (judging by the warping result)
+- The girl-and-dog sequence also looks alright.
+- The juggle sequence is very difficult. I've tried 7-level pyramid, and all sorts of weights in the window. No significant improvement. Could come back in the future.
 
 
 

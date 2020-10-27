@@ -482,7 +482,6 @@ h4 = fspecial('gauss', 25,3);
 total_min = -20;
 total_max = 40;
 
-
 % the motion on girl's left foot is kind of captured
 
 figure(14)
@@ -522,8 +521,6 @@ title('girl-and-dog-01 vs girl-and-dog-02 V map');
 diff_01 = gen_warped_RGB(gd0,gd1,U_01,V_01);
 diff_12 = gen_warped_RGB(gd1,gd2,U_12,V_12);
 
-
-
 figure(13)
 ccc = gcf;
 delete(ccc.Children);
@@ -535,5 +532,99 @@ imshow(diff_12)
 
 % print(gcf, '-dpng', './output/ps5-4-c-2.png')
 
+
+%% part 5a  the juggle sequence
+
+
+clc;
+
+jg0 = double(imread('input/Juggle/0.png'))/255;
+jg1 = double(imread('input/Juggle/1.png'))/255;
+jg2 = double(imread('input/Juggle/2.png'))/255;
+
+% convert to grayscale
+jg0 = mean(jg0,3);
+jg1 = mean(jg1,3);
+jg2 = mean(jg2,3);
+
+% append image to make its size fit the paradigm; 
+jg0 = append_1r1c(jg0);
+jg1 = append_1r1c(jg1);
+jg2 = append_1r1c(jg2);
+
+% in order to make 6+ levels pyramid, let's  upsize the original image
+% further
+jg0(end+32,:) = jg0(end,:);
+jg1(end+32,:) = jg1(end,:);
+jg2(end+32,:) = jg2(end,:);
+
+%%
+
+% this "a" value seems not very important(equal contribution constraint)
+a = 0.4;
+w = kernel_for_pyramid(a);
+
+% what is the best filter for M matrix? not sure
+h5 = fspecial('gauss', 25,3);
+
+% I've jacked this up to 7 levels! But it still isn't great
+[U_01, V_01] = run_hierarchical_LK(jg0,jg1,w,h5,7);
+[U_12, V_12] = run_hierarchical_LK(jg1,jg2,w,h5,7);
+
+
+%%
+% UUVV = {U_01, V_01,U_12, V_12};
+% [total_min, total_max] = get_UV_min_max(UUVV);
+% manually setting the c_range for better visualisation
+total_min = -50;
+total_max = 50;
+
+
+figure(15)
+ccc = gcf;
+delete(ccc.Children);
+
+vl_tightsubplot(2,2,1,'Margin',0.03,'MarginTop',0.06);
+imagesc(U_01)
+caxis manual; caxis([total_min total_max]);colorbar('SouthOutside');
+colormap(gca,jet(100))
+title('Juggle0 vs Juggle1 U map');
+
+vl_tightsubplot(2,2,2,'Margin',0.03,'MarginTop',0.06);
+imagesc(U_12)
+caxis manual; caxis([total_min total_max]);colorbar('SouthOutside');
+colormap(gca,jet(100))
+title('Juggle1 vs Juggle2 U map');
+
+vl_tightsubplot(2,2,3,'Margin',0.03,'MarginTop',0.06);
+imagesc(V_01)
+caxis manual; caxis([total_min total_max]);colorbar('SouthOutside');
+colormap(gca,jet(100))
+title('Juggle0 vs Juggle1 V map');
+
+vl_tightsubplot(2,2,4,'Margin',0.03,'MarginTop',0.06);
+imagesc(V_12)
+caxis manual; caxis([total_min total_max]);colorbar('SouthOutside');
+colormap(gca,jet(100))
+title('Juggle1 vs Juggle2 V map');
+
+
+% print(gcf, '-dpng', './output/ps5-4-d-1.png')
+
+%%  I think the performance is limited due to the background.
+
+diff_01 = gen_warped_RGB(jg0,jg1,U_01,V_01);
+diff_12 = gen_warped_RGB(jg1,jg2,U_12,V_12);
+
+figure(13)
+ccc = gcf;
+delete(ccc.Children);
+
+vl_tightsubplot(1,2,1);
+imshow(diff_01)
+vl_tightsubplot(1,2,2);
+imshow(diff_12)
+
+% print(gcf, '-dpng', './output/ps5-4-d-2.png')
 
 
