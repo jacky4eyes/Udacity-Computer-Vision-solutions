@@ -7,7 +7,7 @@ Remember to enable the parallel computing toolbox for the parallel for loops etc
 **Progress**
 
 	- Complete: PS1, PS2, PS3, PS4, PS5
-	- Ongoing: ?
+	- Ongoing: PS6
 
 **What's below**
 
@@ -260,6 +260,10 @@ Call help function for more detailed explanations.
 - My Yosemite sequence motion looks pretty good! (judging by the warping result)
 - The girl-and-dog sequence also looks alright.
 - The juggle sequence is very difficult. I've tried 7-level pyramid, and all sorts of weights in the window. No significant improvement. Could come back in the future.
+
+# PS6
+
+
 
 
 
