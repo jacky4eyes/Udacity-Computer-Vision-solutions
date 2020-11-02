@@ -120,15 +120,7 @@ Using this method, you generally prefer more data points than less, but to a mod
 
 ### SIFT descriptor
 
-Using the ```VLFeat``` library for SIFT descriptor to avoid fiddly work. Also, they have a very nice tight subplot function ```vl_tightsubplot```:
-
-```matlab
-figure(1)
-vl_tightsubplot(1,2,1);
-imshow(img1)
-vl_tightsubplot(1,2,2);
-imshow(img2)
-```
+Using the ```VLFeat``` library for SIFT descriptor to avoid fiddly work.
 
 Two main functions are used here:
 
@@ -263,11 +255,33 @@ Call help function for more detailed explanations.
 
 # PS6
 
+### Particle filter
 
+##### Pros and cons of full-colour tracking
+
+1. In certain regions, comparing 3 channels does feel more informative than comparing the luminance only..
+
+##### weighted sampling
+
+1. MATLAB ```randsample``` provides this functionalities directly. 
+   - ```y = randsample(n,k,true,w)``` uses a vector of non-negative weights, `w`, whose length is `n`, to determine the probability that an integer `i` is selected as an entry for `y`.
+2. If you want to perform faster re-sampling, check my OneNote -> fixed-shape pointer on Roulette 
 
 
 
 # MATLAB plotting tips
+
+#### Tight subplots
+
+```VLFeat``` has a very nice tight subplot function ```vl_tightsubplot```:
+
+```matlab
+figure(1)
+vl_tightsubplot(1,2,1);
+imshow(img1)
+vl_tightsubplot(1,2,2);
+imshow(img2)
+```
 
 #### refresh stuff in the same figure window without old stuff sticking around
 
