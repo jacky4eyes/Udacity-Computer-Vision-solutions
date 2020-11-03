@@ -1,0 +1,13 @@
+%% draw circle on an RGB image
+% both C and r could be floating point numbers
+% img_disp = draw_circle(img)
+function img_disp = draw_circle(img, C, r)
+    img_disp = img;
+    for i = 1:360
+        pi/i
+    end
+    
+    
+
+
+end

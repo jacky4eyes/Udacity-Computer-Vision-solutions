@@ -257,15 +257,49 @@ Call help function for more detailed explanations.
 
 ### Particle filter
 
-##### Pros and cons of full-colour tracking
+##### Full-colour tracking vs. grayscale tracking
 
-1. In certain regions, comparing 3 channels does feel more informative than comparing the luminance only..
+In certain regions, comparing 3 channels does feel more informative than comparing the luminance only..
 
-##### weighted sampling
+##### Weighted sampling
 
-1. MATLAB ```randsample``` provides this functionalities directly. 
-   - ```y = randsample(n,k,true,w)``` uses a vector of non-negative weights, `w`, whose length is `n`, to determine the probability that an integer `i` is selected as an entry for `y`.
-2. If you want to perform faster re-sampling, check my OneNote -> fixed-shape pointer on Roulette 
+MATLAB ```randsample``` provides this functionalities directly. 
+
+- ```y = randsample(n,k,true,w)``` uses a vector of non-negative weights, `w`, whose length is `n`, to determine the probability that an integer `i` is selected as an entry for `y`.
+- If you want to perform faster re-sampling, check my OneNote -> fixed-shape pointer on Roulette 
+
+##### Patch size 
+
+1. Smaller patch size will improve runtime because of the SSE-based similarity function etc. This effect is not very significantly. 
+2. Larger size tend to take longer to locate the object; but once it is on track, it is way more robust (less "jittery"). But this also means when the particles are cramped at a wrong location, they will be more likely become stuck there.
+3. Therefore, when an object is moving relatively quickly, a moderately small window has some advantages over a large window, in terms of keeping up with the object's speed.
+
+##### Similarity parameter
+
+In terms of the sigma used in the patch likelihood function, I think we could regard it as the sensor noise.
+
+Provided the patch size is not small, sensor noise setting should be kept low. This is advantageous because:
+
+1. It will dramatically increase the speed your tracker in terms of following the objects fast movement, as well as recovery after occlusion.
+2. The precision is better, e.g. face contour is as close to the original as possible.
+
+##### Particle number
+
+1. Obviously, this is the dominant factor if runtime is of concern. 
+2. A tracker with more particles tends to be more robust and "smooth".
+3. If you have to run the algorithm with few particles, consider increase sensor noises - otherwise it is easy to lose track of the object for too long.
+
+##### Noisy video
+
+You would have to incorporate a decent number of particles. 
+
+Slightly increase your sensor noise or dynamic uncertainty might help, but overdoing so will lead to a shipwreck.
+
+### Appearance Model Update
+
+
+
+
 
 
 
