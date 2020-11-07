@@ -21,11 +21,19 @@ function w_arr = calc_particle_weights(template, img, S, sigma_MSE)
         patch = img(v_p-(n-1)/2:v_p+(n-1)/2, u_p-(m-1)/2:u_p+(m-1)/2,:);
         
         % calculate 3-channel similarity (likelihood)
-        mse_RGB = mean(mean((template-patch).^2.^0.5));
-        likelihood_RGB = exp(-mse_RGB/(2*sigma_MSE^2));
-
-        % combine RGB likelihood (temporary method)
-        likelihood = norm(reshape(likelihood_RGB,[3 1]),2)/3;
+        mse_RGB = mean(mean(abs(template-patch)));
+        mse_RGB = reshape(mse_RGB,[3 1]);
+%         mse_R = mean(mean(abs(template(:,:,1) - patch(:,:,1))));
+%         mse_G = mean(mean(abs(template(:,:,2) - patch(:,:,2))));
+%         mse_B = mean(mean(abs(template(:,:,3) - patch(:,:,3))));
+        
+        likelihood_RGB = exp(-mse_RGB./(2.*sigma_MSE.^2));
+%         likelihood_RGB(3) = likelihood_RGB(3)/5;
+        
+%         combine likelihoods; still experimenting with different methods
+        likelihood = norm(likelihood_RGB, 2)/3;
+%         likelihood = likelihood_RGB(1)*likelihood_RGB(2)*likelihood_RGB(3);
+%         likelihood = likelihood_RGB(1)+likelihood_RGB(2)+likelihood_RGB(3);
         w_arr(i) = likelihood;
         
     end

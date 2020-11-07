@@ -268,11 +268,11 @@ MATLAB ```randsample``` provides this functionalities directly.
 - ```y = randsample(n,k,true,w)``` uses a vector of non-negative weights, `w`, whose length is `n`, to determine the probability that an integer `i` is selected as an entry for `y`.
 - If you want to perform faster re-sampling, check my OneNote -> fixed-shape pointer on Roulette 
 
-##### Patch size 
+##### Window size 
 
-1. Smaller patch size will improve runtime because of the SSE-based similarity function etc. This effect is not very significantly. 
-2. Larger size tend to take longer to locate the object; but once it is on track, it is way more robust (less "jittery"). But this also means when the particles are cramped at a wrong location, they will be more likely become stuck there.
-3. Therefore, when an object is moving relatively quickly, a moderately small window has some advantages over a large window, in terms of keeping up with the object's speed.
+1. Smaller window size will improve runtime because of the SSE-based similarity function etc. This effect is not very significant. 
+2. Larger size tend to take longer to locate the object; but once it is on track, it is way more robust (less "jittery"). But this also means when the particles are cramped at a wrong location, they tend to get stuck there.
+3. Therefore, for quickly-moving objects, a moderately small window is better, in order to keep up with the object's speed.
 
 ##### Similarity parameter
 
@@ -297,7 +297,9 @@ Slightly increase your sensor noise or dynamic uncertainty might help, but overd
 
 ### Appearance Model Update
 
+##### Tracking window for a hand
 
+For an object whose shape is not a square, you'd better try to include as many pixels that belong to the object as possible. Thus, it is more <mark>convenient to choose a small window</mark>. This is because the more background you include, the harder it is to track
 
 
 
