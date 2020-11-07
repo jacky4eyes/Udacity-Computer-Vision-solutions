@@ -5,7 +5,7 @@ clear all; clc;
 % then add to path all functions essential to this project
 addpath(genpath('../utilities'));  
 
-%% Part 1 setup
+%% Part 1 face tracking with MSE similarity
 
 % implay('./input/pres_debate.avi')
 fileID = fopen('./input/pres_debate.txt','r');
@@ -98,11 +98,13 @@ imshow(img_temp)
 % print(gcf, '-dpng','./output/ps6-1-e-3.png')
 
  
-%% Part 2
+%% Part 2 Hand tracking with MSE similarity
+
 
 % pres_debate = VideoReader('./input/pres_debate.avi');
 pres_debate = VideoReader('./input/noisy_debate.avi');
 img_1 = double(read(pres_debate,[1]))./255;
+
 
 %% iterations and video creating
 
@@ -146,7 +148,7 @@ for t = 1:2
     i_new = randsample(size(S,1),N,true,w_t);
     S = S(i_new,:); 
 
-    % patch update
+    % template update
     [~,ind] = max(w_t);
     best_patch = img_t(S(ind,2)-int16(n-1)/2:S(ind,2)+int16(n-1)/2, S(ind,1)-int16(m-1)/2:S(ind,1)+int16(m-1)/2, :);
     template = alpha.*best_patch + (1-alpha).*template;
@@ -204,5 +206,88 @@ imshow(img_temp)
 
 
 %% Part 3
+
+
+pres_debate = VideoReader('./input/pres_debate.avi');
+% pres_debate = VideoReader('./input/noisy_debate.avi');
+img_1 = double(read(pres_debate,[1]))./255;
+
+%% iterations face or hand
+tic
+% hyperparameters
+num_of_bins = [4 4 2];
+alpha = 0.5;
+m = 81;
+n = 81;
+% my_win = [322,175,m,n];  % face
+my_win = [540,395,m,n];   % hand
+
+u = (round(my_win(1))+round(my_win(1)+my_win(3)-1))/2;
+v = (round(my_win(2))+round(my_win(2)+my_win(4)-1))/2;
+
+% initial round: uniform random sampling (excluding the margin area)
+template = img_1(my_win(2):my_win(2)+my_win(4)-1,my_win(1):my_win(1)+my_win(3)-1,:);
+img_1_disp = draw_window(img_1,my_win);
+img_1_disp(1:n, size(img_1,2)-m+1:end,:) = template;
+
+
+v_temp = VideoWriter('temp.avi');
+open(v_temp)
+
+u_new = u;
+v_new = v;
+for t = 1:100
+
+    img_t = double(read(pres_debate,[t]))./255;  
+
+    [u_new,v_new,hist_template,hist_patch] = mean_shift_tracking(template,img_t,num_of_bins,u_new,v_new,7,30);
+    [t u_new v_new] 
+    
+    u_new = min(pres_debate.Width-(m-1)/2-1, max((m-1)/2+1, u_new));
+    v_new = min(pres_debate.Height-(n-1)/2-1, max((n-1)/2+1,v_new));
+    
+    % template update
+    best_patch = img_t(v_new-int16(n-1)/2:v_new+int16(n-1)/2, u_new-int16(m-1)/2:u_new+int16(m-1)/2, :);
+    template = alpha.*best_patch + (1-alpha).*template;
+
+    loc_x = round(u_new) -(m-1)/2;
+    loc_y = round(v_new) -(n-1)/2;
+    img_t_disp_with_template = draw_window(img_t,[loc_x, loc_y, m, n]);
+    img_t_disp_with_template(1:n, size(img_1,2)-m+1:end,:) = template;
+    writeVideo(v_temp, img_t_disp_with_template)
+
+end
+
+v_temp.close()
+
+toc
+
+
+ccc = gcf;
+delete(ccc.Children);
+figure(7);
+vl_tightsubplot(1,2,1);
+imshow(img_1_disp)
+vl_tightsubplot(1,2,2);
+imshow(img_t_disp_with_template)
+
+
+%% save 3a-b results
+
+v3 = VideoReader('./temp.avi');
+% img_temp = read(v3, [140]);
+
+ccc = gcf;
+delete(ccc.Children);
+figure(8);
+vl_tightsubplot(1,1,1);
+imshow(template)
+print(gcf, '-dpng','./output/ps6-3-b-1.png')
+
+
+
+%% part 4
+
+
 
 

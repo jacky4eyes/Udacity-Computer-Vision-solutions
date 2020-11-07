@@ -303,6 +303,33 @@ Some tips:
 
 Also, I added a histogram threshold to the likelihood function: for patch matching purposes, only calculate the SSE of the pixels that meet the histogram criteria.
 
+##### Strategies for noisy video 
+
+Having tried quite a few methods, none is really meaningful. 
+
+1. Slightly increase window size
+2. Adjust similarity parameter
+3. Use more particles
+
+
+
+### Mean-shift tracking
+
+This is an interesting technique, not difficult to implement, but generally with longer runtime.
+
+My approach is to create 3D histograms for each patch, and use chi-squared test to perform similarity check.  
+
+```                matlab
+% hist_patch and hist_template are both of size (6, 6, 2)
+% Test score
+hist_template(hist_template==0) = nan;  % this is necessary
+T = nansum(nansum(nansum((hist_template - hist_patch).^2./hist_template)));
+```
+
+Ideally, search a neighbourhood based on a Gaussian kernel. The window doesn't have to be too large.
+
+I haven't made it performing as good as the particle filter. 
+
 
 
 # MATLAB plotting tips
