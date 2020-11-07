@@ -270,38 +270,38 @@ MATLAB ```randsample``` provides this functionalities directly.
 
 ##### Window size 
 
-1. Smaller window size will improve runtime because of the SSE-based similarity function etc. This effect is not very significant. 
-2. Larger size tend to take longer to locate the object; but once it is on track, it is way more robust (less "jittery"). But this also means when the particles are cramped at a wrong location, they tend to get stuck there.
-3. Therefore, for quickly-moving objects, a moderately small window is better, in order to keep up with the object's speed.
+1. Larger size tend to take longer to locate the object; but once it is on track, it is way more robust (less "jittery"). But this also means when the particles are cramped at a wrong location, they tend to get stuck there.
+2. Smaller window size will improve runtime because of the SSE-based similarity function etc. This effect is not very significant. Therefore, <mark>for quickly-moving objects, a moderately small window is better</mark>, in order to keep up with the object's speed.
 
-##### Similarity parameter
+##### Similarity (likelihood function) parameter
 
-In terms of the sigma used in the patch likelihood function, I think we could regard it as the sensor noise.
+Commonly expressed as the sigma in a Gaussian PDF, I think we could perhaps regard it as the sensor noise. Importantly, whenever using a small patch size and the image is not very noisy, the sigma value should be kept low because:
 
-Provided the patch size is not small, sensor noise setting should be kept low. This is advantageous because:
+1. High reward for the correct matches. This will dramatically increase the speed your tracker in terms of following the objects fast movement, as well as recovery after occlusion.
+2. Also the precision is better, e.g. face contour is as close to the original as possible.
 
-1. It will dramatically increase the speed your tracker in terms of following the objects fast movement, as well as recovery after occlusion.
-2. The precision is better, e.g. face contour is as close to the original as possible.
+##### Number of particles
 
-##### Particle number
+If runtime is of concern, this obviously would have to be small. In general, trackers with more particles tends to be more robust and "smooth". 
 
-1. Obviously, this is the dominant factor if runtime is of concern. 
-2. A tracker with more particles tends to be more robust and "smooth".
-3. If you have to run the algorithm with few particles, consider increase sensor noises - otherwise it is easy to lose track of the object for too long.
+Meanwhile, if you must run the algorithm with very few particles, consider increase sensor noises - otherwise it is easy to lose track of the object for too long. But be careful, overdoing so will lead to a shipwreck.
 
-##### Noisy video
+##### Dynamic uncertainty
 
-You would have to incorporate a decent number of particles. 
-
-Slightly increase your sensor noise or dynamic uncertainty might help, but overdoing so will lead to a shipwreck.
+This is a way of introducing new locations for your particles along during tracking.
 
 ### Appearance Model Update
 
-##### Tracking window for a hand
+##### Patch update
 
-For an object whose shape is not a square, you'd better try to include as many pixels that belong to the object as possible. Thus, it is more <mark>convenient to choose a small window</mark>. This is because the more background you include, the harder it is to track
+For an object whose shape is not constant, you need to update the template by new images. This can be done by combining old and new patches by simple linear equations. (The idea is similar to an IIR filter) .
 
+Some tips:
 
+- If the object is not a square, you'd better use smaller window sizes. This will help you include as many pixels that belong to the object as possible, and less of the background.
+- Remember to update your patch after calculating the new weights but <mark>before injecting the dynamic uncertainties</mark>!
+
+Also, I added a histogram threshold to the likelihood function: for patch matching purposes, only calculate the SSE of the pixels that meet the histogram criteria.
 
 
 

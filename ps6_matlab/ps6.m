@@ -100,22 +100,22 @@ imshow(img_temp)
  
 %% Part 2
 
-pres_debate = VideoReader('./input/pres_debate.avi');
+% pres_debate = VideoReader('./input/pres_debate.avi');
+pres_debate = VideoReader('./input/noisy_debate.avi');
 img_1 = double(read(pres_debate,[1]))./255;
 
+%% iterations and video creating
 
-
-
-%%
 tic
 
 % hyperparameters
-N = 500;  % sample size
-sigma_MSE = [0.01 0.01 0.01]*1;   % Likelihood smoothing
-sigma_D = 5;       % dynamic uncertainty 
-alpha = 0.5;
-m = 71;
-n = 71;
+N = 1000;  % sample size
+sigma_MSE = [0.01 0.01 0.01]*3;   % Likelihood smoothing
+sigma_D = 20;       % dynamic uncertainty 
+q = 8;
+alpha = 0.7;
+m = 81;
+n = 81;
 hand_win = [540,395,m,n];
 
 u = (round(hand_win(1))+round(hand_win(1)+hand_win(3)-1))/2;
@@ -134,28 +134,22 @@ v_temp = VideoWriter('temp.avi');
 open(v_temp)
 
 
-for t = 1:60
+for t = 1:2
     
     % read new frame
-%     if mod(t,2)==1
     img_t = double(read(pres_debate,[t]))./255;
-%     end
+
     % update particles
-    w_t = calc_particle_weights(template, img_t, S, sigma_MSE);
+    w_t = calc_particle_weights(template, img_t, S, sigma_MSE, q);
     
-    % resampling
+    % resampling based on the new weights
     i_new = randsample(size(S,1),N,true,w_t);
     S = S(i_new,:); 
 
-    % dynamic uncertainty (help particles move along)
-    S(:,1) = S(:,1)+int16(round(normrnd(0,sigma_D,[N 1])));
-    S(:,2) = S(:,2)+int16(round(normrnd(0,sigma_D,[N 1])));
-%     S(:,1) = S(:,1)+int16(round(unifrnd(-10,10,[N 1])));
-%     S(:,2) = S(:,2)+int16(round(unifrnd(-10,10,[N 1])));
-    
-    % clamp at the margin area 
-    S(:,1) = min(pres_debate.Width-(m-1)/2-1, max((m-1)/2+1, S(:,1)));
-    S(:,2) = min(pres_debate.Height-(n-1)/2-1, max((n-1)/2+1, S(:,2)));
+    % patch update
+    [~,ind] = max(w_t);
+    best_patch = img_t(S(ind,2)-int16(n-1)/2:S(ind,2)+int16(n-1)/2, S(ind,1)-int16(m-1)/2:S(ind,1)+int16(m-1)/2, :);
+    template = alpha.*best_patch + (1-alpha).*template;
     
     % visualise the new states
     weighted_u_mean = w_t'*double(S(i_new,1));
@@ -167,14 +161,17 @@ for t = 1:60
     img_1_disp_with_template = draw_window(img_t,[loc_x, loc_y, m,n]);
     img_1_disp_with_template = draw_uv(img_1_disp_with_template, S);
     img_1_disp_with_template = draw_circle(img_1_disp_with_template, [weighted_u_mean weighted_v_mean], spread_radius);
-    
-    [~,ind] = max(w_t);
-    best_patch = img_t(S(ind,2)-int16(n-1)/2:S(ind,2)+int16(n-1)/2, S(ind,1)-int16(m-1)/2:S(ind,1)+int16(m-1)/2, :);
-%     best_patch = img_t(loc_y:loc_y+n-1,loc_x:loc_x+m-1,:);
-    template = alpha.*best_patch + (1-alpha).*template;
     img_1_disp_with_template(1:n, size(img_1,2)-m+1:end,:) = template;
     writeVideo(v_temp, img_1_disp_with_template)
 
+    % dynamic uncertainty (help particles move along)
+    S(:,1) = S(:,1)+int16(round(normrnd(0,sigma_D,[N 1])));
+    S(:,2) = S(:,2)+int16(round(normrnd(0,sigma_D,[N 1])));
+    
+    % clamp at near the boundary of the image frame
+    S(:,1) = min(pres_debate.Width-(m-1)/2-1, max((m-1)/2+1, S(:,1)));
+    S(:,2) = min(pres_debate.Height-(n-1)/2-1, max((n-1)/2+1, S(:,2)));
+    
 end
 
 v_temp.close()
@@ -185,17 +182,27 @@ toc
 ccc = gcf;
 delete(ccc.Children);
 figure(3);
-vl_tightsubplot(1,2,1);
+vl_tightsubplot(2,2,1);
 imshow(img_1_disp)
-vl_tightsubplot(1,2,2);
+vl_tightsubplot(2,2,2);
 imshow(img_1_disp_with_template)
+vl_tightsubplot(2,2,3,'Spacing',0.1);
+plot(w_t)
 
 
- 
+
+%% 2a-b  save  resulsts
+v2 = VideoReader('./temp.avi');
+img_temp = read(v2, [140]);
+
+ccc = gcf;
+delete(ccc.Children);
+figure(5);
+vl_tightsubplot(1,1,1);
+imshow(img_temp)
+% print(gcf, '-dpng','./output/ps6-2-b-1.png')
 
 
-%%
+%% Part 3
 
-
-sum(sum(abs(template - template.^2),1),2)
 
