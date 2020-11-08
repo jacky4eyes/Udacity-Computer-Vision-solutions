@@ -282,11 +282,136 @@ delete(ccc.Children);
 figure(8);
 vl_tightsubplot(1,1,1);
 imshow(template)
-print(gcf, '-dpng','./output/ps6-3-b-1.png')
+% print(gcf, '-dpng','./output/ps6-3-b-1.png')
 
 
 
 %% part 4
+
+walker = VideoReader('./input/pedestrians.avi');
+% pres_debate = VideoReader('./input/noisy_debate.avi');
+img_1 = double(read(walker,[1]))./255;
+% fileID = fopen('./input/pedestrians.txt','r');
+% win_loc = fscanf(fileID,'%f');
+
+%%
+tic
+% hyperparameters
+N = 500;  % sample size
+sigma_MSE = [0.01 0.01 0.01]*2;   % Likelihood smoothing
+sigma_D = 20;       % dynamic uncertainty 
+alpha = 0.7;
+u0 = 261;
+v0 = 182;
+c0 = 1;
+m0 = 101;
+n0 = 293;
+m_min = int16(0.2*(m0-1)/2)*2+1;
+n_min = int16(0.2*(n0-1)/2)*2+1;
+
+% not updating the template in this case
+template = img_1(v0-(n0-1)/2:v0+(n0-1)/2,u0-(m0-1)/2:u0+(m0-1)/2,:);
+template_small = imresize(template,[n_min m_min]); 
+
+
+S = [randsample(u0-50:u0+50,N,true);  randsample(v0-20:v0+20,N,true); randsample(linspace(0.4,1.2,1e5),N,true)]';
+
+W = size(img_1,2);
+H = size(img_1,1);
+w_arr = zeros([N 1]);
+
+
+v_temp = VideoWriter('temp.avi');
+open(v_temp)
+
+for t = 1:300
+
+    img_t = double(read(walker,[t]))./255;  
+    w_arr = zeros([N 1]);
+    for i = 1:N
+        patch_i = grab_patch(img_t,S(i,:));
+        patch_small = imresize(patch_i,[n_min m_min]);
+        abs_error = abs(template_small-patch_small);
+        mse_RGB = zeros([3 1]);
+        mse_RGB(1) = mean(mean(abs_error(:,:,1)));
+        mse_RGB(2) = mean(mean(abs_error(:,:,2)));
+        mse_RGB(3) = mean(mean(abs_error(:,:,3)));
+        likelihood_RGB = exp(-mse_RGB./(2.*sigma_MSE.^2));
+        likelihood = norm(likelihood_RGB, 2)/3;
+        w_arr(i) = likelihood;
+    end
+    
+    % normalisation
+    w_arr_norm = w_arr./norm(w_arr,1);  
+    [best_val,best_ind] = max(w_arr);  
+    best_mse = -log(best_val)*(2*sigma_MSE(1)^2);
+    [t best_mse]
+    
+    % resampling only if the best patch makes sense
+    if best_mse<0.2
+        i_new = randsample(size(S,1),N,true,w_arr_norm);
+        S = S(i_new,:);         
+    end
+    
+    % visualisation
+
+    u_disp = int16(S(best_ind,1));
+    v_disp = int16(S(best_ind,2));
+    m_disp = int16(S(best_ind,3)*(m0-1)/2)*2-1;
+    n_disp = int16(S(best_ind,3)*(n0-1)/2)*2-1;    
+    
+    img_t_disp = draw_window(img_t,[u_disp-(m_disp+1)/2 v_disp-(n_disp+1)/2 m_disp n_disp]);
+    template_disp = imresize(template,0.4);
+    template_disp = template_disp./max(max(template_disp));
+    img_t_disp(1:size(template_disp,1),1:size(template_disp,2),:) = template_disp;
+    img_t_disp(img_t_disp<0) = 0;
+    img_t_disp(img_t_disp>=1) = 1;
+    
+    writeVideo(v_temp, img_t_disp)
+    
+    
+    % dynamic uncertainty (help particles move along)
+    S(:,1) = S(:,1)+normrnd(0,5,[N 1]);
+    S(:,2) = S(:,2)+normrnd(0,5,[N 1]);
+    S(:,3) = S(:,3)+normrnd(0,0.02,[N 1]);
+    
+    S = clamp_state(S);
+end
+
+v_temp.close()
+toc
+
+
+
+%%
+ccc = gcf;
+delete(ccc.Children);
+figure(9);
+vl_tightsubplot(2,2,1);
+imshow(img_1)
+vl_tightsubplot(2,2,2);
+imshow(img_t_disp)
+vl_tightsubplot(2,2,3);
+imshow(template_small)
+% vl_tightsubplot(2,2,4);
+% imshow(hhh)
+
+
+
+%% save part 4 results
+
+v4 = VideoReader('./temp.avi');
+img_temp = read(v4, [240]);
+
+ccc = gcf;
+delete(ccc.Children);
+figure(10);
+vl_tightsubplot(1,1,1);
+imshow(img_temp)
+% print(gcf, '-dpng','./output/ps6-4-a-4.png')
+
+
+
 
 
 

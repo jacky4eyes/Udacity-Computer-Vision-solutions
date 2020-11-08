@@ -257,38 +257,77 @@ Call help function for more detailed explanations.
 
 ### Particle filter
 
-##### Full-colour tracking vs. grayscale tracking
+There are a couple of issues worth mentioning.
 
-In certain regions, comparing 3 channels does feel more informative than comparing the luminance only..
-
-##### Weighted sampling
-
-MATLAB ```randsample``` provides this functionalities directly. 
-
-- ```y = randsample(n,k,true,w)``` uses a vector of non-negative weights, `w`, whose length is `n`, to determine the probability that an integer `i` is selected as an entry for `y`.
-- If you want to perform faster re-sampling, check my OneNote -> fixed-shape pointer on Roulette 
-
-##### Window size 
-
-1. Larger size tend to take longer to locate the object; but once it is on track, it is way more robust (less "jittery"). But this also means when the particles are cramped at a wrong location, they tend to get stuck there.
-2. Smaller window size will improve runtime because of the SSE-based similarity function etc. This effect is not very significant. Therefore, <mark>for quickly-moving objects, a moderately small window is better</mark>, in order to keep up with the object's speed.
-
-##### Similarity (likelihood function) parameter
+##### 1. Similarity (likelihood function) parameter
 
 Commonly expressed as the sigma in a Gaussian PDF, I think we could perhaps regard it as the sensor noise. Importantly, whenever using a small patch size and the image is not very noisy, the sigma value should be kept low because:
 
 1. High reward for the correct matches. This will dramatically increase the speed your tracker in terms of following the objects fast movement, as well as recovery after occlusion.
 2. Also the precision is better, e.g. face contour is as close to the original as possible.
 
-##### Number of particles
+##### 2. Full-colour tracking vs. grayscale tracking
 
-If runtime is of concern, this obviously would have to be small. In general, trackers with more particles tends to be more robust and "smooth". 
+In certain regions, comparing 3 channels does feel more informative than comparing the luminance only.
+
+How you combine the three likelihood function for RGB is quite flexible. I have tried a few options and found this is acceptable:
+
+```matlab
+abs_error = abs(template-patch);
+mse_RGB = zeros([3 1]);
+mse_RGB(1) = mean(mean(abs_error(:,:,1)));
+mse_RGB(2) = mean(mean(abs_error(:,:,2)));
+mse_RGB(3) = mean(mean(abs_error(:,:,3)));
+likelihood_RGB = exp(-mse_RGB./(2.*sigma_MSE.^2));
+likelihood = norm(likelihood_RGB, 2)/3;      % how I combine them for now
+```
+
+##### 3. Weighted sampling
+
+MATLAB ```randsample``` provides this functionalities directly. 
+
+- ```y = randsample(n,k,true,w)``` uses a vector of non-negative weights, `w`, whose length is `n`, to determine the probability that an integer `i` is selected as an entry for `y`.
+- If you want to perform faster re-sampling, check my OneNote -> fixed-shape pointer on Roulette 
+
+##### 4. Window size 
+
+1. Larger size tend to take longer to locate the object; but once it is on track, it is way more robust (less "jittery"). But this also means when the particles are cramped at a wrong location, they tend to get stuck there.
+2. Smaller window size will improve runtime because of the SSE-based similarity function etc. This effect is not very significant. Therefore, <mark>for quickly-moving objects, a moderately small window is better</mark>, in order to keep up with the object's speed.
+
+##### 5. Number of particles
+
+If runtime is of concern, this obviously would have to be small. In general, trackers with more particles tends to be more robust and "smooth". Around 1000 particles will be considered not small for 2-state models.
 
 Meanwhile, if you must run the algorithm with very few particles, consider increase sensor noises - otherwise it is easy to lose track of the object for too long. But be careful, overdoing so will lead to a shipwreck.
 
-##### Dynamic uncertainty
+##### 6. Dynamic uncertainty
 
-This is a way of introducing new locations for your particles along during tracking.
+This is a way of introducing new locations for your particles along during tracking. Basically a Gaussian noise over the states at the end of each iteration (i.e. come into effect when reading a new frame).
+
+##### 7. Window size  as a state variable
+
+This is necessary for an object moving away from the camera or approaching it, namely change of perspective. But implementing this is a bit trickier! You need to handle the margin of the frame etc. properly. 
+
+##### 8. Handling occlusion
+
+<mark>My solution for occlusions is to use a MSE threshold to decide whether or not we shall update the state in this iteration</mark>. Don't use the likelihood function due to numerical instability. If the best patch gives a very high MSE, then we neither update the particle weights nor do resampling.
+
+Of course, the threshold needs to be found and defined by you...
+
+```matlab
+% normalisation
+w_arr_norm = w_arr./norm(w_arr,1);  
+[best_val,best_ind] = max(w_arr);  
+best_mse = -log(best_val)*(2*sigma_MSE(1)^2);
+
+% resampling only if the best patch makes sense
+if best_mse<0.2
+    i_new = randsample(size(S,1),N,true,w_arr_norm);
+    S = S(i_new,:);         
+end
+```
+
+
 
 ### Appearance Model Update
 
@@ -328,7 +367,9 @@ T = nansum(nansum(nansum((hist_template - hist_patch).^2./hist_template)));
 
 Ideally, search a neighbourhood based on a Gaussian kernel. The window doesn't have to be too large.
 
-I haven't made it performing as good as the particle filter. 
+I haven't tune the parameter to the extent that it performs as good as the particle filter. 
+
+
 
 
 
@@ -391,6 +432,13 @@ caxis([bottom top]);
 colorbar('SouthOutside');
 colormap(gca,jet(100))
 
+```
+
+#### resize image
+
+``` matlab
+% halve the size
+img_1_new = imresize(img_1, 0.5);
 ```
 
 
