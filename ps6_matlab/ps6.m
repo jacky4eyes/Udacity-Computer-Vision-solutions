@@ -105,6 +105,11 @@ imshow(img_temp)
 pres_debate = VideoReader('./input/noisy_debate.avi');
 img_1 = double(read(pres_debate,[1]))./255;
 
+%%
+
+[11 ...
+    +22]
+
 
 %% iterations and video creating
 

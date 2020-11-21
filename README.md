@@ -371,6 +371,47 @@ Maybe I haven't tuned the hyperparameter sufficiently, so the performance isn't 
 
 
 
+# PS7
+
+### Motion history image (MHI)
+
+#### Binary sequence 
+
+If a pure background image is not available, we have subtract consecutive images, in order to establish a binary sequence. You would probably see some unwanted objects standing out, although <mark> it doesn't need to be perfect</mark>, as the MHI usually will end up very smooth. 
+
+To address this issue, some pre-processing steps are recommended:
+
+1. A moderate Gaussian blur.
+2. Morphological operations, e.g. opening or closing (```imopen``` or ```imclose``` in MATLAB). 
+3. Threshold selection - use histogram to have a rough idea before fine tuning.
+
+All of these require trial and error. Also, I personally think more sophisticated filtering can be done to make this more automatic.
+
+#### Obtaining MHI
+
+Very straightforward, just follow this:
+
+```matlab
+t0 = 2;
+tau = 90;
+M_tau = zeros([size(binary_sequence,2) size(binary_sequence,3)]);
+for t = t0:t0+tau-1
+	Bt = binary_sequence(t,:,:);
+    Bt = reshape(Bt,[size(Bt,2) size(Bt,3)]);  % clean up the obsolete dimension
+    M_tau(Bt~=1) = (M_tau(Bt~=1)-1);
+    M_tau(M_tau<0) = 0;
+    M_tau(Bt==1) = tau;
+end
+```
+
+#### Recognition via MHI
+
+- At least use scale invariant image moments. 
+- Most people use Hu moments.
+- Euclidean distance measurement is commonly used.
+
+
+
 
 
 # MATLAB plotting tips
