@@ -1,29 +1,20 @@
 # Overview
 
+<mark>**All completed!**</mark>
+
 The code is in MATLAB. Problem set source files included. (template scripts and input images.)
 
 Remember to enable the parallel computing toolbox for the parallel for loops etc. You may need to download and install the package if your MATLAB distribution does not come with it.
 
-**Progress**
+Below  are the comments and highlights for some PS's. It probably is too lengthy.. 
 
-	- Complete: PS1, PS2, PS3, PS4, PS5, PS6
-	- Ongoing: PS7
-
-**What's below**
-
-Specific comments and highlights in some PS's.
-
-More technical details are in the comments in the codes. But more of them are in my study notes.
-
-Use this a quick brush-up and reminder of what this course is about.
+(More technical details are in the comments in the codes. But more of them are in my study notes. Use this a quick brush-up and reminder of what this course is about.)
 
 
 
 # PS1
 
-Nothing important to state..
-
-
+Nothing important to say..
 
 
 
@@ -405,6 +396,8 @@ end
 ```
 
 #### Recognition via MHI
+
+The key is to create a good feature vector, so that you can compare the MHI of different image sequences.
 
 - At least use scale invariant image moments. 
 - Most people use Hu moments.
