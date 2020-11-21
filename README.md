@@ -6,8 +6,8 @@ Remember to enable the parallel computing toolbox for the parallel for loops etc
 
 **Progress**
 
-	- Complete: PS1, PS2, PS3, PS4, PS5
-	- Ongoing: PS6
+	- Complete: PS1, PS2, PS3, PS4, PS5, PS6
+	- Ongoing: PS7
 
 **What's below**
 
@@ -354,7 +354,7 @@ Having tried quite a few methods, none is really meaningful.
 
 ### Mean-shift tracking
 
-This is an interesting technique, not difficult to implement, but generally with longer runtime.
+This is an interesting technique, not difficult to implement. However, it is generally slower.
 
 My approach is to create 3D histograms for each patch, and use chi-squared test to perform similarity check.  
 
@@ -367,7 +367,7 @@ T = nansum(nansum(nansum((hist_template - hist_patch).^2./hist_template)));
 
 Ideally, search a neighbourhood based on a Gaussian kernel. The window doesn't have to be too large.
 
-I haven't tune the parameter to the extent that it performs as good as the particle filter. 
+Maybe I haven't tuned the hyperparameter sufficiently, so the performance isn't as good as the particle filter. 
 
 
 
